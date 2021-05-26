@@ -9,10 +9,10 @@ class Agent(pygame.sprite.Sprite):
     def __init__(self,agent_id = None):
     
         if agent_id:        
-            self.image =pygame.image.load(os.path.join(libpath,agent_id,'.png')).convert_alpha()
-            self.control=pygame.image.load(os.path.join(libpath,agent_id,'_ctrl.png')).convert_alpha()
+            self.image =pygame.image.load(os.path.join(libpath,'res',agent_id+'.png')).convert_alpha()
+            self.control=pygame.image.load(os.path.join(libpath,'res',agent_id+'_ctrl.png')).convert_alpha()
 
-            self.image.convert_alpha()  # optimise alpha
+            self.image.convert_alpha()  # optimise alpha1
             self.image.set_colorkey(ALPHA)  # set alpha
             self.control.convert_alpha()
             self.control.set_colorkey(ALPHA)
