@@ -26,7 +26,7 @@ pinMode(l2_pin, OUTPUT);
 digitalWrite(l1_pin, LOW);
 digitalWrite(l2_pin, HIGH);
   
-Serial.begin(9600);
+Serial.begin(115200);
 Serial.println("$s01$pollo$init_successful$0xbadcacca");
 
 }

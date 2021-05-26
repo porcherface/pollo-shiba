@@ -12,6 +12,8 @@ import os
 import pathlib
 import argparse
 import ctypes
+import serial
+import threading
 
 from pygame.locals import FULLSCREEN as FULLSCREEN
 import entities.agent
@@ -28,7 +30,23 @@ pygame.display.init()
 # program icon
 # programIcon = pygame.image.load(programIconPath)
 
+# SERIAL PORTS
+port = "/dev/ttyACM1"
+baudrate = 9600 
 
+ser = serial.Serial(port, baudrate)
+
+def readSerial():
+    while True:
+        #print("trying a arduino read")
+        try:
+            data_str = ser.read(ser.inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
+            if data_str != "" and data_str != " ":
+                print("[DEBUG] data_str: "+data_str)                
+        except:
+            pass
+
+thread = threading.Thread(target = readSerial)
 
 # qui metto la pianta
 #backdroppath=os.path.join(labyrinthpath,'res','bg_maze.png')
@@ -134,6 +152,8 @@ def handle_events(events):
 Main Loop
 '''
 main = True
+thread.start()
+
 while main:
 
     #print("events")
