@@ -16,25 +16,25 @@ import serial
 import threading
 
 from pygame.locals import FULLSCREEN as FULLSCREEN
-import entities.agent
+from entities.agent import Button,Emitter
 
 # paths
 MAIN_PATH = pathlib.Path(__file__).parent.absolute()
 
-FPS = 40
+
 # inits
 pygame.init()
 pygame.mixer.init()
 pygame.display.init()
 
 # program icon
-# programIcon = pygame.image.load(programIconPath)
+programIcon = pygame.image.load(os.path.join(MAIN_PATH,"icon.png"))
+pygame.display.set_icon(programIcon)
 
-# SERIAL PORTS
-port = "/dev/ttyACM1"
+# SERIAL PORTS SETTINGS
+port = "/dev/ttyACM0"
 baudrate = 9600 
-
-ser = serial.Serial(port, baudrate)
+# ser = serial.Serial(port, baudrate)
 
 def readSerial():
     while True:
@@ -42,16 +42,25 @@ def readSerial():
         try:
             data_str = ser.read(ser.inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
             if data_str != "" and data_str != " ":
-                print("[DEBUG] data_str: "+data_str)                
+                print("[DEBUG] data_str: "+data_str)  
+                state = parse(data_str)
+                print("state: "+str(state))              
         except:
             pass
 
-thread = threading.Thread(target = readSerial)
+# this function reads a message from station
+# quando leggiamo messaggi dalla stazione dobbiamo
+# fare update di map
+def parse(data):
+    splitted = data_str.split("$")
+    print("PARSED MESSAGE: ")
+    print("from: "+splitted[1])
+    print("to: "+splitted[2])
+    print("payload: "+splitted[3])
+    print("seqnum: "+splitted[4])
+    return splitted[3] == "L01_high"
 
-# qui metto la pianta
-#backdroppath=os.path.join(labyrinthpath,'res','bg_maze.png')
-#backdrop = pygame.image.load(os.path.join(backdroppath)).convert_alpha()
-#backdropbox = backdrop.get_rect()
+thread = threading.Thread(target = readSerial)
 
 # risoluzione monitor 1
 RES_X = 1380
@@ -59,7 +68,7 @@ RES_Y = 1080
 
 world = pygame.display.set_mode([RES_X, RES_Y])
 
-        
+# set background masks     
 back_1 = pygame.image.load(os.path.join(MAIN_PATH,'background','map.png')).convert_alpha()
 back_2 = pygame.image.load(os.path.join(MAIN_PATH,'background','term.png')).convert_alpha()
 back_3 = pygame.image.load(os.path.join(MAIN_PATH,'background','control.png')).convert_alpha()
@@ -73,13 +82,7 @@ rect_4 = back_4.get_rect().move(1000, 700)
 room = pygame.image.load(os.path.join(MAIN_PATH, 'background', 'room.png')).convert_alpha()
 room_rect = room.get_rect().move(50,150)
 
-
-back_1.blit(room, room_rect)
-world.blit(back_1, rect_1)
-world.blit(back_2, rect_2)
-world.blit(back_3, rect_3)
-world.blit(back_4, rect_4) 
-
+FPS = 40
 clock = pygame.time.Clock()
 
 
@@ -111,12 +114,24 @@ clock = pygame.time.Clock()
 *************************************************************************************************
 '''
 
-# gli agenti da mettere dentro la scena, mettiamo un pulsante un emitter una trap e un receiver
+# gli agenti da mettere dentro la scena, mettiamo due pulsanti, un emitter (per ora)
+a1 = Emitter()
+a2 = Button()
+a3 = Button()
+
+a1.place(350, 430, 150, 150)
+a2.place(110, 310, 250, 150)
+a3.place(800, 310, 350, 150)
+
 agent_list = pygame.sprite.Group()
-#agent_list.add()
+agent_list.add(a1)
+agent_list.add(a2)
+agent_list.add(a3)
 
-
+#################################
 # some functions
+
+
 
 # this function updates the program state (positions, activations, message board
 # and other shits like these)
@@ -125,9 +140,21 @@ def update():
 
 # this function blits everything we need to blit to screen
 def render():
+
+    back_1.blit(room, room_rect)
+
+    for agent in agent_list:
+        agent.draw(back_1, back_3)
+    
+    world.blit(back_1, rect_1)
+    world.blit(back_2, rect_2)
+    world.blit(back_3, rect_3)
+    world.blit(back_4, rect_4) 
+
     pygame.display.flip()
     pygame.display.update()
     clock.tick(FPS)
+
     return 1
 
 # this function handles the events fired from the viewport
@@ -136,11 +163,13 @@ def handle_events(events):
     main = True
     for event in events:
         if event.type == pygame.QUIT:
-            pygame.quit()
-            try:
-                sys.exit()
-            finally:
-                main = False
+            
+            main = False
+            #pygame.quit()
+            #try:
+            #    sys.exit()
+            #finally:
+            #    main = False
 
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
@@ -148,9 +177,12 @@ def handle_events(events):
     
     return main
 
+
+##################################################
 '''
 Main Loop
 '''
+##################################################
 main = True
 thread.start()
 
