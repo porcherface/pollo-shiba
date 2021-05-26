@@ -19,9 +19,11 @@ import entities.agent
 # paths
 MAIN_PATH = pathlib.Path(__file__).parent.absolute()
 
+FPS = 40
 # inits
 pygame.init()
 pygame.mixer.init()
+pygame.display.init()
 
 # program icon
 # programIcon = pygame.image.load(programIconPath)
@@ -34,19 +36,34 @@ pygame.mixer.init()
 #backdropbox = backdrop.get_rect()
 
 # risoluzione monitor 1
-RES_X = 1280
+RES_X = 1380
 RES_Y = 1080
 
-world = pygame.display
-screen = pygame.display
+world = pygame.display.set_mode([RES_X, RES_Y])
 
-world.set_mode([RES_X, RES_Y])
-#screen.set_mode([RES_X, RES_Y])
-# gli agenti da mettere dentro la scena, mettiamo un pulsante un emitter una trap e un receiver
-
-agent_list = pygame.sprite.Group()
-#agent_list.add()
         
+back_1 = pygame.image.load(os.path.join(MAIN_PATH,'background','map.png')).convert_alpha()
+back_2 = pygame.image.load(os.path.join(MAIN_PATH,'background','term.png')).convert_alpha()
+back_3 = pygame.image.load(os.path.join(MAIN_PATH,'background','control.png')).convert_alpha()
+back_4 = pygame.image.load(os.path.join(MAIN_PATH,'background','doge.png')).convert_alpha()
+
+rect_1 = back_1.get_rect().move(0, 0)
+rect_2 = back_2.get_rect().move(1000, 0)
+rect_3 = back_3.get_rect().move(0, 700)
+rect_4 = back_4.get_rect().move(1000, 700)
+
+room = pygame.image.load(os.path.join(MAIN_PATH, 'background', 'room.png')).convert_alpha()
+room_rect = room.get_rect().move(50,150)
+
+
+back_1.blit(room, room_rect)
+world.blit(back_1, rect_1)
+world.blit(back_2, rect_2)
+world.blit(back_3, rect_3)
+world.blit(back_4, rect_4) 
+
+clock = pygame.time.Clock()
+
 
 ''' ui concept: 
 
@@ -72,7 +89,7 @@ agent_list = pygame.sprite.Group()
 *                                                                 *                              *
 **************************************************************************************************
 *                                                                 *                              *
-*    1000 x 280                                                   *  380 x 280                   *
+*    1000 x 380                                                   *  380 x 380                   *
 *    sfondo grigio, una specie di banco dei bottoni. ci           *  un logo con un pollo shiba  *
 *    metterò dentro i comandi di laser, pulsanti e cazzi vari     *  e magari quache tasto tipo  *
 *                                                                 *  QUIT o roba cosi            *
@@ -80,66 +97,47 @@ agent_list = pygame.sprite.Group()
 **************************************************************************************************
 '''
 
+# gli agenti da mettere dentro la scena, mettiamo un pulsante un emitter una trap e un receiver
+agent_list = pygame.sprite.Group()
+#agent_list.add()
 
 
-'''
 
 # some functions
-def render(self):
-    pass
+def render():
+    pygame.display.update()
+    pygame.display.flip()
+    clock.tick(FPS)
+    return 1
 
-def update(self):
-    pass
+def update():
+    return 1
 
-def handle_events(self, events):
+def handle_events(events):
     
     main = True
-
     for event in events:
-
         if event.type == pygame.QUIT:
             pygame.quit()
             try:
                 sys.exit()
             finally:
                 main = False
-        if event.type == pygame.KEYDOWN:
 
-            self.respawn_bugfix = True
+        if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_ESCAPE:
                 pygame.quit()
-                try:
-                    sys.exit()
-                finally:
-                    main = False
-
-
-            if event.key == ord('a'):
-                self.player1.control(-steps1, 0)
-            if event.key == pygame.K_LEFT:
-                self.player2.control(-steps2, 0)
-            
-            if event.key == ord('e'):
-                self.player1.showchat(1)
-                
-            if event.key == ord('f'):
-                self.focused_player = self.player1
-
-        return main
-
-'''
+    
+    return main
 
 '''
 Main Loop
 '''
 main = True
 while main:
-    #main = self.handle_events(pygame.event.get())    
-    #main = self.update()
-    #self.render()
-    #main = self.reunite()
 
-
-
-    pass
-
+    #print("events")
+    main = handle_events(pygame.event.get())    
+    update()
+    render()
+    
