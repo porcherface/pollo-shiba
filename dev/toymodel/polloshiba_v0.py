@@ -67,34 +67,30 @@ clock = pygame.time.Clock()
 
 ''' ui concept: 
 
-**************************************************************************************************
-*                                                                 *                              *
-*                                                                 *                              *
-*   room - pianta della stanza                                    *  msgboard                    *
-*   1000 x 700                                                    *  380 x 700                   *
-*                                                                 *                              *
-*   sfondo bianco, ci inserisco una pianta della stanza           *  sfondo nero                 *
-*   siccome la pianta per ora manca, ci ficco dentro un           *  ci metto dentro un terminal *
-*   rettangolo con dei finti muri e buonanotte                    *  in stile hacker             *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-*                                                                 *                              *
-**************************************************************************************************
-*                                                                 *                              *
-*    1000 x 380                                                   *  380 x 380                   *
-*    sfondo grigio, una specie di banco dei bottoni. ci           *  un logo con un pollo shiba  *
-*    metterò dentro i comandi di laser, pulsanti e cazzi vari     *  e magari quache tasto tipo  *
-*                                                                 *  QUIT o roba cosi            *
-*                                                                 *                              *
-**************************************************************************************************
+*************************************************************************************************
+*                                                                *                              *
+*                                                                *                              *
+*   room - pianta della stanza                                   *  msgboard                    *
+*   1000 x 700                                                   *  380 x 700                   *
+*                                                                *                              *
+*   sfondo bianco, ci inserisco una pianta della stanza          *  sfondo nero                 *
+*   siccome la pianta per ora manca, ci ficco dentro un          *  ci metto dentro un terminal *
+*   rettangolo con dei finti muri e buonanotte                   *  in stile hacker             *
+*                                                                *                              *
+*                                                                *                              *
+*                                                                *                              *
+*                                                                *                              *
+*                                                                *                              *
+*                                                                *                              *
+*                                                                *                              *
+*************************************************************************************************
+*                                                                *                              *
+*    1000 x 380                                                  *  380 x 380                   *
+*    sfondo grigio, una specie di banco dei bottoni. ci          *  un logo con un pollo shiba  *
+*    metterò dentro i comandi di laser, pulsanti e cazzi vari    *  e magari quache tasto tipo  *
+*                                                                *  QUIT o roba cosi            *
+*                                                                *                              *
+*************************************************************************************************
 '''
 
 # gli agenti da mettere dentro la scena, mettiamo un pulsante un emitter una trap e un receiver
@@ -102,17 +98,21 @@ agent_list = pygame.sprite.Group()
 #agent_list.add()
 
 
-
 # some functions
-def render():
-    pygame.display.update()
-    pygame.display.flip()
-    clock.tick(FPS)
-    return 1
 
+# this function updates the program state (positions, activations, message board
+# and other shits like these)
 def update():
     return 1
 
+# this function blits everything we need to blit to screen
+def render():
+    pygame.display.flip()
+    pygame.display.update()
+    clock.tick(FPS)
+    return 1
+
+# this function handles the events fired from the viewport
 def handle_events(events):
     
     main = True
@@ -137,7 +137,9 @@ main = True
 while main:
 
     #print("events")
-    main = handle_events(pygame.event.get())    
     update()
     render()
+    main = handle_events(pygame.event.get())    
     
+
+
