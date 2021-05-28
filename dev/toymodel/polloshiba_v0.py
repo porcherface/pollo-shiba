@@ -17,6 +17,20 @@ import threading
 
 from pygame.locals import FULLSCREEN as FULLSCREEN
 from entities.agent import Button,Emitter
+from entities.msgbox import MsgBox
+#######
+'''
+things to do tomorrow: 
+1) distinguish button read from emitter read.
+2) add a timer and timer+button logic
+3) add a blinking deadly lazor
+4) add pollo shiba bottom right
+5) implement lazor switch logic, which means:
+   5a) implement read from arduino
+   5b) implement chatbox (HUGE SHIT)
+'''
+#########
+
 
 # paths
 MAIN_PATH = pathlib.Path(__file__).parent.absolute()
@@ -31,36 +45,8 @@ pygame.display.init()
 programIcon = pygame.image.load(os.path.join(MAIN_PATH,"icon.png"))
 pygame.display.set_icon(programIcon)
 
-# SERIAL PORTS SETTINGS
-port = "/dev/ttyACM0"
-baudrate = 9600 
-# ser = serial.Serial(port, baudrate)
 
-def readSerial():
-    while True:
-        #print("trying a arduino read")
-        try:
-            data_str = ser.read(ser.inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
-            if data_str != "" and data_str != " ":
-                print("[DEBUG] data_str: "+data_str)  
-                state = parse(data_str)
-                print("state: "+str(state))              
-        except:
-            pass
 
-# this function reads a message from station
-# quando leggiamo messaggi dalla stazione dobbiamo
-# fare update di map
-def parse(data):
-    splitted = data_str.split("$")
-    print("PARSED MESSAGE: ")
-    print("from: "+splitted[1])
-    print("to: "+splitted[2])
-    print("payload: "+splitted[3])
-    print("seqnum: "+splitted[4])
-    return splitted[3] == "L01_high"
-
-thread = threading.Thread(target = readSerial)
 
 # risoluzione monitor 1
 RES_X = 1380
@@ -74,6 +60,8 @@ back_2 = pygame.image.load(os.path.join(MAIN_PATH,'background','term.png')).conv
 back_3 = pygame.image.load(os.path.join(MAIN_PATH,'background','control.png')).convert_alpha()
 back_4 = pygame.image.load(os.path.join(MAIN_PATH,'background','doge.png')).convert_alpha()
 
+
+
 rect_1 = back_1.get_rect().move(0, 0)
 rect_2 = back_2.get_rect().move(1000, 0)
 rect_3 = back_3.get_rect().move(0, 700)
@@ -81,6 +69,8 @@ rect_4 = back_4.get_rect().move(1000, 700)
 
 room = pygame.image.load(os.path.join(MAIN_PATH, 'background', 'room.png')).convert_alpha()
 room_rect = room.get_rect().move(50,150)
+logo = pygame.image.load(os.path.join(MAIN_PATH,'background','minilogo.png')).convert_alpha()
+logo_rect = logo.get_rect().move(100,100)
 
 FPS = 40
 clock = pygame.time.Clock()
@@ -128,24 +118,32 @@ agent_list.add(a1)
 agent_list.add(a2)
 agent_list.add(a3)
 
-#################################
+box = MsgBox()
+
+#############################
+
+back_4.blit(logo, logo_rect)
+
+
+
+
 # some functions
-
-
 
 # this function updates the program state (positions, activations, message board
 # and other shits like these)
 def update():
+    box.update("ajejebrazorf")
     return 1
 
 # this function blits everything we need to blit to screen
 def render():
 
     back_1.blit(room, room_rect)
-
+    beam.draw(back_1)
     for agent in agent_list:
         agent.draw(back_1, back_3)
     
+    box.draw(back_2)
     world.blit(back_1, rect_1)
     world.blit(back_2, rect_2)
     world.blit(back_3, rect_3)
@@ -162,6 +160,8 @@ def handle_events(events):
     
     main = True
     for event in events:
+
+        
         if event.type == pygame.QUIT:
             
             main = False
@@ -184,6 +184,58 @@ Main Loop
 '''
 ##################################################
 main = True
+
+
+# SERIAL PORTS SETTINGS
+port = "/dev/ttyACM0"
+baudrate = 115200 
+ser = serial.Serial(port, baudrate)
+data_str = ""
+class Beam():
+    def __init__(self):
+        self.img = pygame.image.load(os.path.join(MAIN_PATH,'entities','res','beam.png')).convert_alpha()
+        self.rect = self.img.get_rect().move(360,250)
+        self.state = 0
+    def draw(self, screen):
+        if self.state:
+            screen.blit(self.img, self.rect)
+
+
+beam = Beam()
+
+# this function reads a message from station
+# quando leggiamo messaggi dalla stazione dobbiamo
+# fare update di map
+def parseMe(data):
+
+    #splitted = data_str.split("$")
+    print("PARSED MESSAGE: ")
+    #print("from: "+splitted[1])
+    #print("to: "+splitted[2])
+    #print("payload: "+splitted[3])
+    #print("seqnum: "+splitted[4])
+    #return splitted[3] == "L01_high"
+    return ("HI" in data)
+
+def readSerial():
+    while True:
+        #print("trying a arduino read")
+        try:
+            #sleep(10)
+            data_str = ser.read(ser.inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
+            if data_str != "" and data_str != " ":
+                print("[DEBUG] data_str: "+data_str)  
+                state = parseMe(data_str)
+                print("state: "+str(state))              
+                if (state == True):
+                    #print("drawing lazor")
+                    beam.state = 1
+                else:
+                    beam.state = 0
+        except:
+            pass
+
+thread = threading.Thread(target = readSerial)
 thread.start()
 
 while main:
