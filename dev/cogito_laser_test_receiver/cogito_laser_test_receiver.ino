@@ -57,6 +57,16 @@ void setup(void) {
   u8g2.sendBuffer();
 }
 
+
+/* messages to polloshiba on trigger*/
+String trigger_msg = "$S01$pollo$R01_TRIG$0x1312";
+
+
+
+
+
+
+
 void loop(void) {
   if (!triggered) {
     /*u8g2.clearBuffer(); // clear the internal memory
