@@ -27,6 +27,8 @@ U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
 void setup(void) {
   u8g2.begin();
+  Serial.begin(115200);
+  
   u8g2.setFont(u8g2_font_8x13B_mr );
   delay(10);
 
@@ -80,6 +82,7 @@ void loop(void) {
 */
     if (analogRead(15) < soglia) {
       triggered = true;
+      Serial.println(trigger_msg);
     }
     //delay(1);
   }
