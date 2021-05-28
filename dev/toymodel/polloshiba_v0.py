@@ -16,7 +16,7 @@ import serial
 import threading
 
 from pygame.locals import FULLSCREEN as FULLSCREEN
-from entities.agent import Button,Emitter
+from entities.agent import Button,Emitter, Receiver
 from entities.msgbox import MsgBox
 #######
 '''
@@ -104,19 +104,22 @@ clock = pygame.time.Clock()
 *************************************************************************************************
 '''
 
-# gli agenti da mettere dentro la scena, mettiamo due pulsanti, un emitter (per ora)
+# gli agenti da mettere dentro la scena, mettiamo due pulsanti, un emitter e un receiver
 a1 = Emitter()
 a2 = Button()
 a3 = Button()
+a4 = Receiver()
 
 a1.place(350, 430, 150, 150)
 a2.place(110, 310, 250, 150)
 a3.place(800, 310, 350, 150)
+a4.place(350, 180, 450, 150)
 
 agent_list = pygame.sprite.Group()
 agent_list.add(a1)
 agent_list.add(a2)
 agent_list.add(a3)
+agent_list.add(a4)
 
 box = MsgBox()
 
@@ -187,7 +190,7 @@ main = True
 
 
 # SERIAL PORTS SETTINGS
-port = "/dev/ttyACM0"
+port = "/dev/ttyUSB0"
 baudrate = 115200 
 ser = serial.Serial(port, baudrate)
 data_str = ""
