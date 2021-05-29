@@ -190,19 +190,22 @@ main = True
 
 
 # SERIAL PORTS SETTINGS
-port = "/dev/ttyUSB0"
+port = "/dev/ttyUSB1"
 baudrate = 115200 
 ser = serial.Serial(port, baudrate)
 data_str = ""
 class Beam():
     def __init__(self):
         self.img = pygame.image.load(os.path.join(MAIN_PATH,'entities','res','beam.png')).convert_alpha()
+        self.died = pygame.image.load(os.path.join(MAIN_PATH,'background','youdied.jpeg')).convert_alpha()
         self.rect = self.img.get_rect().move(360,250)
         self.state = 0
     def draw(self, screen):
-        if self.state:
+        if self.state == 1:
             screen.blit(self.img, self.rect)
-
+        if self.state == 2:
+            screen.blit(self.died, self.rect)
+            
 
 beam = Beam()
 
@@ -218,7 +221,7 @@ def parseMe(data):
     #print("payload: "+splitted[3])
     #print("seqnum: "+splitted[4])
     #return splitted[3] == "L01_high"
-    return ("HI" in data)
+    return ("HI" in data)*1 + ("TRIG" in data)*2
 
 def readSerial():
     while True:
@@ -230,11 +233,14 @@ def readSerial():
                 print("[DEBUG] data_str: "+data_str)  
                 state = parseMe(data_str)
                 print("state: "+str(state))              
-                if (state == True):
+                if (state == 1):
                     #print("drawing lazor")
                     beam.state = 1
-                else:
+                if state == 0:
                     beam.state = 0
+                if state == 2:
+                    beam.state = 2
+
         except:
             pass
 
