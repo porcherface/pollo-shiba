@@ -5,8 +5,13 @@
 # descr: a level scene
 ######################################################################
 
+import pygame
+
 from .interface import Interface
 from .graphics.screen import GameScreen
+
+FPS = 40
+clock = pygame.time.Clock()
 
 stationif = Interface()
 
@@ -47,19 +52,42 @@ class Level:
 		# setup lasers
 		print("Initializing agents...")
 		if num == 1:
-			agent_list = InitAgents_L1()
+			print("[SKIPPED]")
+			# agent_list = InitAgents_L1()
 		print("  [ OK ]  ")
 
+
 		# draw graphics	
+		self.screen = GameScreen()
 		print("Drawing graphics... ")
+		self.screen.draw()
 
 		# setting state
+		print("setting room state...")
 
+		print("setting up timer")
+		if num == 1:
+			timer = 200
+
+		print("entering into exec loop...")
+
+		self.execute()
 
 	def execute(self):
-		pass
 
+		# events to register:
+		# start button, 
+		# intermediate button
+		# dead!
+		# timeout
+		# win
 
+		running = True
+		while running:
+			events = pygame.event.get()
+			for event in events:
+				pass
 
+			clock.tick(FPS)	
 
 

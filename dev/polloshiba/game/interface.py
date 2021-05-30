@@ -25,7 +25,7 @@ class GlobalClass(object):
 import serial
 
 class Interface:
-	def __init__(cls):
+	def __init__(self):
 		print("interface init")
 		ports = []
 		#ports.append("/dev/ttyUSB1")
@@ -33,9 +33,9 @@ class Interface:
 		#ports.append("/dev/ttyUSB3")
 		#ports.append("/dev/ttyUSB4")
 		baudrate = 115200 
-		cls.iflist = []
+		self.iflist = []
 		for port in ports:		
-			cls.iflist.append(serial.Serial(port, baudrate) )
+			self.iflist.append(serial.Serial(port, baudrate) )
 
 
 	def testConnection(self):
@@ -43,6 +43,18 @@ class Interface:
 
 	def send(self, msg, station_id):
 		print("sending "+msg+" to station "+str(station_id))
+		self.iflist[station_id - 1].write( bytes(msg,'ascii') )
 
 	def waitack(self, station_id):
-		pass
+		while True:
+			try:
+				data_str = self.iflist[station_id-1].read(self.iflist[station_id-1].inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
+				if data_str != "" and data_str != " ":
+				    if "KO" in data_str:
+				        return 0
+				    if "OK" in data_str:
+				        return 0
+
+			except:
+				pass
+		
