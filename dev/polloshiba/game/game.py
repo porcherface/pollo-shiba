@@ -13,6 +13,9 @@ class NewGame:
 			raise NotImplementedError
 
 		# handshake with player
+		print("***********************")
 		print("hello "+playername)
-
+		print("***********************")
+		
+		print("launching level 1")	
 		Level(1)

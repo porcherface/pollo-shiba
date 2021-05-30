@@ -6,6 +6,8 @@
 ######################################################################
 
 from .interface import Interface
+from .graphics.screen import GameScreen
+
 stationif = Interface()
 
 ''' 
@@ -41,16 +43,21 @@ def InitAgents_L1():
 class Level:
 	def __init__(self, num):
 
+		# preparation 
+		# setup lasers
+		print("Initializing agents...")
 		if num == 1:
 			agent_list = InitAgents_L1()
+		print("  [ OK ]  ")
+
+		# draw graphics	
+		print("Drawing graphics... ")
+
+		# setting state
 
 
-
-
-
-
-
-
+	def execute(self):
+		pass
 
 
 
