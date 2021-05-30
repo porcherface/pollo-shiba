@@ -29,10 +29,14 @@ int waitInit(int *_pins)
   return 0;
   /* pseudo code for waitInit
   /* 
-  while (not serial read init message)
+  while (not reading any init message)
   {  
     ;
   }
+
+  /* INITIALIZE LAZORS*/
+
+  /* GET OUT */ 
   if (init ok)
     return 0; 
   return 1;    

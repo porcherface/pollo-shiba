@@ -46,6 +46,7 @@ MAIN_PATH = pathlib.Path(__file__).parent.absolute()
 pygame.init()
 pygame.mixer.init()
 pygame.display.init()
+pygame.font.init() 
 
 # program icon
 icon_path = os.path.join(MAIN_PATH,"game", "graphics","res","icon.png")
@@ -60,5 +61,6 @@ if __name__ == "__main__":
   print(pollo)
 
 # start a single session (player, lives, game_mode)
+# but only if paghi dieci euri
 NewGame("porcherface", 3, "competition")
 

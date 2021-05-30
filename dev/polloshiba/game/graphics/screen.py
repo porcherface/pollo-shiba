@@ -24,7 +24,7 @@ class GameScreen:
 
 		self.screen = pygame.display.set_mode([RES_X, RES_Y])
 
-		# set background masks     
+		# set background masks   
 		self.room = RoomView()
 		self.term = TerminalView(playername)
 		self.ctrl = ControlView()

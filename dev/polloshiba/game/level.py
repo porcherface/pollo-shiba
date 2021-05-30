@@ -46,7 +46,7 @@ def InitAgents_L1():
 
 
 class Level:
-	def __init__(self, num):
+	def __init__(self, num, playername):
 
 		# preparation 
 		# setup lasers
@@ -58,10 +58,8 @@ class Level:
 
 
 		# draw graphics	
-		self.screen = GameScreen()
-		print("Drawing graphics... ")
-		self.screen.draw()
-
+		self.screen = GameScreen(playername)
+		
 		# setting state
 		print("setting room state...")
 
@@ -69,8 +67,14 @@ class Level:
 		if num == 1:
 			timer = 200
 
-		print("entering into exec loop...")
 
+
+		print("Drawing graphics... ")
+		
+		self.screen.setState(0)
+		self.screen.draw()
+
+		print("entering into exec loop...")
 		self.execute()
 
 	def execute(self):
@@ -86,8 +90,19 @@ class Level:
 		while running:
 			events = pygame.event.get()
 			for event in events:
-				pass
+				self.handle_events(event)
 
 			clock.tick(FPS)	
+
+
+	def handle_events(self, event): 
+		
+		if event.type == pygame.KEYDOWN:
+			if event.key == ord('a'):
+				self.screen.setState(1)    
+				self.screen.draw()
+
+
+
 
 
