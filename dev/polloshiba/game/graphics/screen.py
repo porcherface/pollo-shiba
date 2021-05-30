@@ -16,7 +16,7 @@ from .dogeview import DogeView
 
 
 class GameScreen:
-	def __init__(self):
+	def __init__(self, playername):
 		
 		# risoluzione monitor 1
 		RES_X = 1380
@@ -26,9 +26,10 @@ class GameScreen:
 
 		# set background masks     
 		self.room = RoomView()
-		self.term = TerminalView()
+		self.term = TerminalView(playername)
 		self.ctrl = ControlView()
 		self.doge = DogeView()
+		self.state = 0
 		
 	''' this is an idle time draw, it is performed before execution'''
 	def draw(self):
@@ -40,8 +41,12 @@ class GameScreen:
 		pygame.display.flip()
 		pygame.display.update()
 
-	''' this is a execution time draw, it is important to keep it minimal ''' 
-	def draw_fast(self):
-		pass
+	def setState(self,state):
+		self.state = state
+		self.room.drawState(state)
+		self.room.draw(self.screen)
 
+	''' this is a execution time draw, it is important to keep it minimal ''' 
+	def draw_fast(self,screen):
+		self.room.draw(self.screen)
 
