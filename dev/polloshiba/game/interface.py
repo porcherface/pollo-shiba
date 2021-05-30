@@ -17,7 +17,7 @@ class Singleton(type):
         cls.instance = None
 
 class GlobalClass(object):
-    __metaclass__ = Singleton
+    __metaclass__ = Singleton 
     def __init__():
         print("I am global and whenever attributes are added in one instance, any other instance will be affected as well.")
 '''
