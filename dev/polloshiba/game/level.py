@@ -75,7 +75,8 @@ class Level:
 		self.screen.draw()
 
 		print("entering into exec loop...")
-		self.execute()
+		out = self.execute()
+		self.finalize(out)
 
 	def execute(self):
 
@@ -90,7 +91,16 @@ class Level:
 		while running:
 			events = pygame.event.get()
 			for event in events:
-				self.handle_events(event)
+				outcome = self.handle_events(event)
+				if outcome == 1:
+					# win
+					return 1
+				if outcome == 2:
+					# dead
+					return 2
+				if outcome == 3:
+					# timeout
+					return 3
 
 			self.screen.draw_fast()
 			clock.tick(FPS)	
@@ -103,18 +113,28 @@ class Level:
 				self.screen.setState(1)
 				self.screen.timer.start(pygame.time.get_ticks())    
 				self.screen.draw()
+				return 0
 
 			if event.key == ord('s'):
 				self.screen.setState(2)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
+				return 1
 
 			if event.key == ord('d'):
 				self.screen.setState(3)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
+				return 2
 
-
+			if event.key == ord('f'):
+				self.screen.setState(4)
+				self.screen.timer.stop(pygame.time.get_ticks())    
+				self.screen.draw()
+				return 3
+				
+	def finalize(self, out):
+		return out
 
 
 

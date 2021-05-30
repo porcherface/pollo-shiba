@@ -38,7 +38,7 @@ class Timer():
                 self.counting_time = stop_time- self.start_time
             self.is_going=False
             self.has_stopped = True
-            
+
     def draw(self,world):
 
         if self.is_going:
@@ -48,11 +48,8 @@ class Timer():
         # change milliseconds into minutes, seconds, milliseconds
         counting_seconds = str( int(( self.counting_time)/1000) ).zfill(2)
         counting_millisecond = str( self.counting_time%1000).zfill(3)
-
         counting_string = "%.3s . %.3s" % ( counting_seconds, counting_millisecond)
-
         
-        print(counting_string)
         self.counting_text = self.font.render(str(counting_string), 1, (255,0,0) )
         
         world.blit(self.counting_text, self.counting_rect)
