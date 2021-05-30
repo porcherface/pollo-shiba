@@ -44,9 +44,56 @@ def InitAgents_L1():
 	stationif.send(MSG_4, 4)
 	stationif.waitack(4)
 
+def InitAgents_L2():
+
+	# hardcoded messages for level1
+	print("sending init message to stations...")
+	MSG_1 = "#init$S01$E01E02E03@"
+	MSG_2 = "#init$S02$E04@"
+	MSG_3 = "#init$S03$R01R02R03@"
+	MSG_4 = "#init$S04$R04@"
+
+	print("expecting 4 acks...")
+
+	# send init message to stations
+	stationif.send(MSG_1, 1)
+	stationif.waitack(1)
+
+	stationif.send(MSG_2, 2)
+	stationif.waitack(2)
+	
+	stationif.send(MSG_3, 3)
+	stationif.waitack(3)
+	
+	stationif.send(MSG_4, 4)
+	stationif.waitack(4)
+
+def InitAgents_L3():
+
+	# hardcoded messages for level1
+	print("sending init message to stations...")
+	MSG_1 = "#init$S01$E01E02E03@"
+	MSG_2 = "#init$S02$E04E05E06@"
+	MSG_3 = "#init$S03$R01R02R03@"
+	MSG_4 = "#init$S04$R04R05R06@"
+
+	print("expecting 4 acks...")
+
+	# send init message to stations
+	stationif.send(MSG_1, 1)
+	stationif.waitack(1)
+
+	stationif.send(MSG_2, 2)
+	stationif.waitack(2)
+	
+	stationif.send(MSG_3, 3)
+	stationif.waitack(3)
+	
+	stationif.send(MSG_4, 4)
+	stationif.waitack(4)
 
 class Level:
-	def __init__(self, num, playername):
+	def __init__(self, num, playername, lives):
 
 		# preparation 
 		# setup lasers
@@ -54,11 +101,20 @@ class Level:
 		if num == 1:
 			print("[SKIPPED]")
 			# agent_list = InitAgents_L1()
+		
+		elif num == 2:
+			print("[SKIPPED]")
+			# agent_list = InitAgents_L2()
+
+		elif num == 3:
+			print("[SKIPPED]")
+			# agent_list = InitAgents_L3()
+
 		print("  [ OK ]  ")
 
 
 		# draw graphics	
-		self.screen = GameScreen(playername)
+		self.screen = GameScreen(playername, num, lives)
 		
 		# setting state
 		print("setting room state...")

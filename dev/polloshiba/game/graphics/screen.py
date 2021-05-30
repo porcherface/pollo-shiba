@@ -16,7 +16,7 @@ from .dogeview import DogeView
 from .timer import Timer
 
 class GameScreen:
-	def __init__(self, playername):
+	def __init__(self, playername, level, lives):
 		
 		# risoluzione monitor 1
 		RES_X = 1380
@@ -25,9 +25,9 @@ class GameScreen:
 		self.screen = pygame.display.set_mode([RES_X, RES_Y])
 
 		# set background masks   
-		self.room = RoomView()
+		self.room = RoomView(level)
 		self.term = TerminalView(playername)
-		self.ctrl = ControlView()
+		self.ctrl = ControlView('competition')
 		self.doge = DogeView()
 
 		self.timer = Timer()
@@ -43,7 +43,7 @@ class GameScreen:
 		self.ctrl.draw(self.screen)
 		self.doge.draw(self.screen)
 		self.timer.draw(self.screen)
-		
+
 		pygame.display.flip()
 		pygame.display.update()
 

@@ -14,12 +14,12 @@ import pygame
 from .timer import Timer
 
 class RoomView:
-	def __init__(self, mode = 'competition'):
+	def __init__(self, level, mode = 'competition'):
 		
 		self.back = pygame.image.load(os.path.join(RES_PATH,'res','map.png')).convert_alpha()
 		self.rect = self.back.get_rect()
 
-		self.map = pygame.image.load(os.path.join(RES_PATH,'res','room.png')).convert_alpha()
+		self.map = pygame.image.load(os.path.join(RES_PATH,'res','room'+str(level)+'.png')).convert_alpha()
 		self.mrect = self.map.get_rect().move(100,100)
 		
 		self.states = []

@@ -18,4 +18,4 @@ class NewGame:
 		print("***********************")
 		
 		print("launching level 1")	
-		Level(1, playername)
+		Level(1, playername, lives)
