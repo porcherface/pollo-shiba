@@ -68,10 +68,9 @@ if __name__ == "__main__":
     playername = input("player name: ")
     lives = int( input("lives: "))  
     
+    result = NewGame(playername, lives, "competition").outcome
 
-
-    result = NewGame(playername, lives, "competition")
-
+    print("congrats, "+playername+". you scored: "+str(result))
 # start a single session (player, lives, game_mode)
 # but only if paghi dieci euri
 

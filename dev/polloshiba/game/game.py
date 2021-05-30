@@ -15,11 +15,25 @@ class NewGame:
 		# handshake with player
 		print("***********************")
 		print("hello " + playername)
+		print("you have "+str(lives)+" lives")
 		print("***********************")
 		
-		print("launching level 1")	
-		Level(1, playername, lives)
+		print("launching level 1")
+		level = 1	
+		if lives < 0 or lives > 3:
+			print("too many lives, baby, setting to 1")
+			lives = 1
 
-		Level(2, playername, lives)
+		while level <= 3 and lives > 0:
+			
+			print("launching level "+str(level)+" with "+str(lives)+" lives")
 
-		Level(3, playername, lives)
+			thislevel = Level(level, playername, lives)	
+			if thislevel.outcome == 1:
+				print("level passed!!")
+				level+=1
+			else:
+				print("level failed...")
+				lives -= 1						
+				
+		self.outcome = level	

@@ -150,12 +150,15 @@ class Level:
 				outcome = self.handle_events(event)
 				if outcome == 1:
 					# win
+					running = False
 					return 1
 				if outcome == 2:
 					# dead
+					running = False
 					return 2
 				if outcome == 3:
 					# timeout
+					running = False
 					return 3
 
 			self.screen.draw_fast()
@@ -190,7 +193,7 @@ class Level:
 				return 3
 				
 	def finalize(self, out):
-		return out
+		self.outcome = out
 
 
 

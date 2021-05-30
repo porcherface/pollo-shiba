@@ -26,7 +26,7 @@ class GameScreen:
 
 		# set background masks   
 		self.room = RoomView(level)
-		self.term = TerminalView(playername)
+		self.term = TerminalView(playername,lives)
 		self.ctrl = ControlView('competition')
 		self.doge = DogeView()
 

@@ -13,12 +13,12 @@ import pygame
 from .msgbox import MsgBox
 
 class TerminalView:
-	def __init__(self, playername, mode = 'competition'):
+	def __init__(self, playername, lives, mode = 'competition'):
 		
 		self.back = pygame.image.load(os.path.join(RES_PATH,'res','term.png')).convert_alpha()
 		self.rect = self.back.get_rect().move(1000, 0)
 		self.box = MsgBox(playername)
-		self.box.drawLives(self.back,3)
+		self.box.drawLives(self.back,lives)
 		self.box.drawName(self.back)
 
 	def draw(self, screen):
