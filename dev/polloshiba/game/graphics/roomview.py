@@ -11,6 +11,8 @@ RES_PATH = pathlib.Path(__file__).parent.absolute()
 
 import pygame
 
+from .timer import Timer
+
 class RoomView:
 	def __init__(self, mode = 'competition'):
 		
@@ -24,8 +26,8 @@ class RoomView:
 		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s0.png')).convert_alpha())
 		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s1.png')).convert_alpha())
 
-		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s0.png')).convert_alpha())
-		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s0.png')).convert_alpha())
+		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s2.png')).convert_alpha())
+		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s3.png')).convert_alpha())
 		
 		self.srect = self.states[0].get_rect().move(100,440)
 
@@ -44,4 +46,5 @@ class RoomView:
 	def drawMap(self):	
 		self.back.blit(self.map, self.mrect)
 
-
+	def drawTimer(self, screen):
+		self.timer.draw(screen,pygame.time.get_ticks())

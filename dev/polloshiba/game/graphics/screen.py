@@ -13,7 +13,7 @@ from .roomview import RoomView
 from .terminalview import TerminalView
 from .controlview import ControlView
 from .dogeview import DogeView
-
+from .timer import Timer
 
 class GameScreen:
 	def __init__(self, playername):
@@ -29,15 +29,21 @@ class GameScreen:
 		self.term = TerminalView(playername)
 		self.ctrl = ControlView()
 		self.doge = DogeView()
+
+		self.timer = Timer()
+		self.timer.position(800,500)
+
 		self.state = 0
 		
 	''' this is an idle time draw, it is performed before execution'''
 	def draw(self):
+
 		self.room.draw(self.screen)	
 		self.term.draw(self.screen)
 		self.ctrl.draw(self.screen)
 		self.doge.draw(self.screen)
-
+		self.timer.draw(self.screen)
+		
 		pygame.display.flip()
 		pygame.display.update()
 
@@ -47,6 +53,9 @@ class GameScreen:
 		self.room.draw(self.screen)
 
 	''' this is a execution time draw, it is important to keep it minimal ''' 
-	def draw_fast(self,screen):
-		self.room.draw(self.screen)
+	def draw_fast(self):
+		self.room.draw(self.screen)	
+		self.timer.draw(self.screen)
+		pygame.display.flip()
+		pygame.display.update()
 

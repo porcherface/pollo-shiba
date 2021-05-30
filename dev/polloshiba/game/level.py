@@ -92,6 +92,7 @@ class Level:
 			for event in events:
 				self.handle_events(event)
 
+			self.screen.draw_fast()
 			clock.tick(FPS)	
 
 
@@ -99,8 +100,20 @@ class Level:
 		
 		if event.type == pygame.KEYDOWN:
 			if event.key == ord('a'):
-				self.screen.setState(1)    
+				self.screen.setState(1)
+				self.screen.timer.start(pygame.time.get_ticks())    
 				self.screen.draw()
+
+			if event.key == ord('s'):
+				self.screen.setState(2)
+				self.screen.timer.stop(pygame.time.get_ticks())    
+				self.screen.draw()
+
+			if event.key == ord('d'):
+				self.screen.setState(3)
+				self.screen.timer.stop(pygame.time.get_ticks())    
+				self.screen.draw()
+
 
 
 
