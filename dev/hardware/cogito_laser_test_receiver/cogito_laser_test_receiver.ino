@@ -13,7 +13,6 @@
     Frame Buffer Examples: clearBuffer/sendBuffer. Fast, but may not work with all Arduino boards because of RAM consumption
     Page Buffer Examples: firstPage/nextPage. Less RAM usage, should work with all Arduino boards.
     U8x8 Text Only Example: No RAM usage, direct communication with display controller. No graphics, 8x8 Text only.
-    
 */
 
 bool triggered = false;
@@ -25,13 +24,41 @@ int soglia;
 
 U8G2_SSD1306_128X64_NONAME_F_HW_I2C u8g2(U8G2_R0, /* reset=*/ U8X8_PIN_NONE);
 
+int waitInit(int *_pins)
+{
+  return 0;
+  /* pseudo code for waitInit
+  /* 
+  while (not serial read init message)
+  {  
+    ;
+  }
+  if (init ok)
+    return 0; 
+  return 1;    
+  */
+  
+
+
+}
+
 void setup(void) {
+  
+  int _pins[16]; /* ad esempio si possono salvare qui i pin da accendere */
+
   u8g2.begin();
   Serial.begin(115200);
   
   u8g2.setFont(u8g2_font_8x13B_mr );
   delay(10);
 
+  /* prima di iniziare la campionatura aspettiamo un messaggio di pollo */
+
+  if !waitInit(_pins);
+  /* pollo ci dice quali receiver vogliamo accendere
+
+
+  /* una routine di calibratura */
   while (analogRead(15) == 0) {
     u8g2.clearBuffer(); // pulisci l'attuale buffer grafico
     u8g2.drawStr(0,15,"Attesa luce...");
@@ -57,15 +84,35 @@ void setup(void) {
   u8g2.drawStr(0,20,"Soglia: ");
   u8g2.drawStr(50,20,baseline);
   u8g2.sendBuffer();
+
+
+  /* se è andato tutto bene possiamo dire a pollo OK,
+     se non è andato tutto bene diciamo a pollo KO */
 }
 
 
 /* messages to polloshiba on trigger*/
-String trigger_msg = "$S01$pollo$R01_TRIG$0x1312";
+String trigger_msg = "#S01$R01_TRIG@";
+String ok_msg = " #S01$INIT_OK@;
+String ko_msg = " #S01$INIT_KO@;
 
 
+int sendTrigger(){
+  
+  Serial.println(trigger_msg);
+  return 0;
+}
 
+int terminate()
+{
+  /* qui invece di "12" ci sta una pinlist (ad esempio quella "_pins" che
+  al momento è nello scope di init) */
 
+  digitalWrite(12, LOW);
+
+  /* qui ci vorrebbe una funzione di reset, 
+  che torni al setup per preparare la prossima scena
+}
 
 
 
@@ -82,11 +129,15 @@ void loop(void) {
 */
     if (analogRead(15) < soglia) {
       triggered = true;
-      Serial.println(trigger_msg);
+      sendTrigger();
+      terminate();
     }
     //delay(1);
   }
   else {
+
+    /* qui possiamo mettere le operazioni post trigger */
+
     u8g2.clearBuffer();
     u8g2.setFont(u8g2_font_cursor_tf );
     u8g2.drawGlyph(10,15,0x78);

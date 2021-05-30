@@ -192,8 +192,9 @@ main = True
 # SERIAL PORTS SETTINGS
 port = "/dev/ttyUSB1"
 baudrate = 115200 
-ser = serial.Serial(port, baudrate)
+#ser = serial.Serial(port, baudrate)
 data_str = ""
+
 class Beam():
     def __init__(self):
         self.img = pygame.image.load(os.path.join(MAIN_PATH,'entities','res','beam.png')).convert_alpha()
@@ -244,8 +245,8 @@ def readSerial():
         except:
             pass
 
-thread = threading.Thread(target = readSerial)
-thread.start()
+#thread = threading.Thread(target = readSerial)
+#thread.start()
 
 while main:
 

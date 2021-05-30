@@ -53,10 +53,12 @@ program_icon = pygame.image.load(icon_path)
 pygame.display.set_icon(program_icon)
 
 # station test-call
-Interface()
+#Interface()
 
+# MAIN CODE
 if __name__ == "__main__":
   print(pollo)
 
+# start a single session (player, lives, game_mode)
 NewGame("porcherface", 3, "competition")
 

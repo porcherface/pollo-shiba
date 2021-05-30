@@ -5,8 +5,9 @@ import pygame
 
 class MsgBox:
     def __init__(self):
-        pygame.font.init() # you have to call this at the start, 
-                   # if you want to use this module.
+        # need to init this for font rendering 
+        pygame.font.init() 
+
         self.myfont = pygame.font.SysFont('Comic Sans MS', 30)
         self.textsurface = self.myfont.render("hello msgbox", False, (25, 255, 25))
 
