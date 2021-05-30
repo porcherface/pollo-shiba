@@ -7,6 +7,21 @@
 		
 # SERIAL PORTS SETTINGS
 
+''' we are still reasoning on wheter make a singleton or not
+	just in case, i ripoff a singleton class
+
+
+class Singleton(type):
+    def __init__(cls, name, bases, dict):
+        super(Singleton, cls).__init__(name, bases, dict)
+        cls.instance = None
+
+class GlobalClass(object):
+    __metaclass__ = Singleton
+    def __init__():
+        print("I am global and whenever attributes are added in one instance, any other instance will be affected as well.")
+'''
+
 import serial
 
 class Interface:
