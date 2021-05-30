@@ -19,3 +19,7 @@ class NewGame:
 		
 		print("launching level 1")	
 		Level(1, playername, lives)
+
+		Level(2, playername, lives)
+
+		Level(3, playername, lives)
