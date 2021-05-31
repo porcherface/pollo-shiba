@@ -9,6 +9,10 @@ import pygame
 import time
 from .interface import Interface
 from .graphics.screen import GameScreen
+import pathlib
+import os
+
+FILE_PATH = pathlib.Path(__file__).parent.absolute()
 
 FPS = 40
 clock = pygame.time.Clock()
@@ -121,24 +125,25 @@ class Level:
 
 
 		# draw graphics	
-		self.screen = GameScreen(playername, num, lives)
+		agent_list = None
+		self.screen = GameScreen(playername, num, lives, agent_list)
 		
 		# setting state
 		print("setting room state...")
 		self.screen.setState(0)
 
 
-		print("setting up timer -")
-		if num == 1:
-			timer = 300
-		if num == 2:
-			timer = 120
-		if num == 3:
-			timer = 60
-		print("timer is "+str(timer)+" seconds.")
 		print("  [ OK ]")
 		print("Drawing graphics... ")
 		self.screen.draw()
+
+		print("Launching audio...")
+		musicpath = os.path.join(FILE_PATH,'graphics','res','audio','portal-carolinedeleted.mp3')
+		pygame.mixer.music.load(musicpath)
+		pygame.mixer.music.play()
+		pygame.mixer.music.set_volume(0.3)
+
+
 		print("  [ OK ]  ")
 		print("entering into exec loop...")
 		out = self.execute()
@@ -189,6 +194,7 @@ class Level:
 				self.screen.setState(2)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
+				
 				time.sleep(1)
 				return 1
 
@@ -207,6 +213,14 @@ class Level:
 				return 3
 				
 	def finalize(self, out):
+		
+		# qui ci va la logica di punteggio: 
+
+		if out == 1:
+			self.final_time = self.screen.timer.tostring()
+		else:
+			self.final_time = "---.---"
+			
 		self.outcome = out
 
 
