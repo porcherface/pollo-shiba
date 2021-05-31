@@ -6,7 +6,7 @@
 ######################################################################
 
 import pygame
-
+import time
 from .interface import Interface
 from .graphics.screen import GameScreen
 
@@ -96,6 +96,13 @@ class Level:
 	def __init__(self, num, playername, lives):
 
 		# preparation 
+
+		# operator call (safety measure)
+		password = ""
+		while password != "polloshiba": 
+			password = input("wating operator call: ")
+
+
 		# setup lasers
 		print("Initializing agents...")
 		if num == 1:
@@ -118,18 +125,21 @@ class Level:
 		
 		# setting state
 		print("setting room state...")
-
-		print("setting up timer")
-		if num == 1:
-			timer = 200
-
-
-
-		print("Drawing graphics... ")
-		
 		self.screen.setState(0)
-		self.screen.draw()
 
+
+		print("setting up timer -")
+		if num == 1:
+			timer = 300
+		if num == 2:
+			timer = 120
+		if num == 3:
+			timer = 60
+		print("timer is "+str(timer)+" seconds.")
+		print("  [ OK ]")
+		print("Drawing graphics... ")
+		self.screen.draw()
+		print("  [ OK ]  ")
 		print("entering into exec loop...")
 		out = self.execute()
 		self.finalize(out)
@@ -144,6 +154,7 @@ class Level:
 		# win
 
 		running = True
+		print("\n\n -- Room is ready to use --")
 		while running:
 			events = pygame.event.get()
 			for event in events:
@@ -178,18 +189,21 @@ class Level:
 				self.screen.setState(2)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
+				time.sleep(1)
 				return 1
 
 			if event.key == ord('d'):
 				self.screen.setState(3)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
+				time.sleep(1)
 				return 2
 
 			if event.key == ord('f'):
 				self.screen.setState(4)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
+				time.sleep(1)
 				return 3
 				
 	def finalize(self, out):

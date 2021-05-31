@@ -22,8 +22,7 @@ class GameScreen:
 		RES_X = 1380
 		RES_Y = 1080
 
-		self.screen = pygame.display.set_mode([RES_X, RES_Y])
-
+		self.screen = pygame.display.set_mode([RES_X, RES_Y])#pygame.FULLSCREEN
 		# set background masks   
 		self.room = RoomView(level)
 		self.term = TerminalView(playername,lives)
@@ -31,7 +30,7 @@ class GameScreen:
 		self.doge = DogeView()
 
 		self.timer = Timer()
-		self.timer.position(800,500)
+		self.timer.position(700,550)
 
 		self.state = 0
 		

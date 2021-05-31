@@ -7,4 +7,10 @@
 
 class LeaderBoard:
 	def __init__(self):
-		pass
+		# risoluzione monitor 1
+		RES_X = 1380
+		RES_Y = 1080
+
+		self.screen = pygame.display.set_mode([RES_X, RES_Y])#pygame.FULLSCREEN
+
+	def draw(self):

@@ -6,7 +6,8 @@
 ######################################################################
 
 from .level import Level
-
+from .graphics.screen import GameScreen
+from .graphics.leaderboard import LeaderBoard
 class NewGame:
 	def __init__(self, playername, lives, gamemode):
 		if gamemode != "competition":
@@ -18,11 +19,17 @@ class NewGame:
 		print("you have "+str(lives)+" lives")
 		print("***********************")
 		
-		print("launching level 1")
+
+		print("initializing ui ")
+		#screen = GameScreen(playername, 0, lives)
+		
 		level = 1	
+		if type(lives) != type(5):
+			print("something wrong with input, setting to 1")
 		if lives < 0 or lives > 3:
 			print("too many lives, baby, setting to 1")
 			lives = 1
+		
 
 		while level <= 3 and lives > 0:
 			
@@ -35,5 +42,8 @@ class NewGame:
 			else:
 				print("level failed...")
 				lives -= 1						
-				
+			
 		self.outcome = level	
+		screen = LeaderBoard()
+		
+

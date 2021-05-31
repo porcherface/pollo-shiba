@@ -10,7 +10,7 @@ import pygame
 class Timer():
     def __init__(self):
 
-        self.font = pygame.font.SysFont('Comic Sans MS', 32)
+        self.font = pygame.font.SysFont('Comic Sans MS', 80)
         counting_seconds = str(0).zfill(2)
         counting_millisecond = str(0).zfill(3)
         counting_string = "%.2s:%.3s" % ( counting_seconds, counting_millisecond)
