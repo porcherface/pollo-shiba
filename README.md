@@ -2,48 +2,12 @@
 A Laser Maze in 20 days!
 
 MAY 26, start
+
 MAY 27, toymodel
+
 MAY 28: toy laser
 
-############## per iniziare:
-# (enrico lha gia fatto)
+MAY 30: first software version is ready!
+we are ready to test with some real lazor!
 
-git init 
-# git remote add pollo-shiba <URL SU GITHUB>
-
-
-############# USARE GIT - BASI
-
-# per entrare nella cartella pollo shiba dal terminale
-# cd <path_to _polloshiba>
-# ad esempio
-cd Desktop/pollo-shiba
-
-# per "scaricare" dal repository:
-git pull pollo-shiba master
-
-# # per aggiungere un file o una modifica a un file
-# git add <file_path>, ad esempio
-git add hello_git.txt
-
-# per fare un commit:
-git commit -m "messaggio del commit"
-# il messaggio del commit è obbligatorio!
-
-# una volta eseguito un commit (o piu commit) si caricano le modifiche online
-git push pollo-shiba master
-# con questo comando rendi effettivi tutti i commit che hai fatto
-
-# per vedere i commit di altri
-git log 
-############################ UTILS
-# per cancellare un file
-# git rm <nome_file>
-
-per spostare o rinominare un file
-# git mv <nome1> <nome2>
-
-
-
-
-
+![READY](dev/polloshiba/game/graphics/res/s01.png)
