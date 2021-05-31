@@ -10,4 +10,4 @@ MAY 28: toy laser
 MAY 30: first software version is ready!
 we are ready to test with some real lazor!
 
-![READY](dev/polloshiba/game/graphics/res/s01.png)
+![READY](dev/polloshiba/game/graphics/res/s0.png)
