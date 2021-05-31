@@ -38,7 +38,7 @@ class GameScreen:
 			start_time = 60
 		print("timer is "+str(start_time)+" seconds.")
 		self.timer = Timer(start_time)
-		self.timer.position(700,530)
+		self.timer.position(750,530)
 
 		self.state = 0
 		
