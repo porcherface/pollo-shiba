@@ -28,10 +28,23 @@ class GlobalClass(object):
 
 # for version 1.0.0 -  serial connection arduino-like
 import serial
+import pygame
+
+# event key, used also in interface.py (actually hardcoded)
+TIMEOUT_EVENT_KEY =  pygame.USEREVENT + 1
 
 class Interface:
+
+	# we better make an explic initializer ?
 	def __init__(self):
+		self.INITIALIZED = False
+		self.TRIGGERED = False
+		self.BUTTON_1 = False
+		self.BUTTON_2 = False
+
+	def initialize(self):
 		print("interface init")
+		self.INITIALIZED = True
 		ports = []
 
 		# for now i hardcoded the devices
@@ -58,21 +71,39 @@ class Interface:
 
 	# sends msg to station labeled as station_id
 	def send(self, msg, station_id):
-		print("sending "+msg+" to station "+str(station_id))
-		self.iflist[station_id - 1].write( bytes(msg,'ascii') )
+		if self.INITIALIZED:
+			print("sending "+msg+" to station "+str(station_id))
+			self.iflist[station_id - 1].write( bytes(msg,'ascii') )
 
 	# a blocking function that awaits an acknowledged message
 	# from station marked as stationid
 	def waitack(self, station_id):
-		while True:
+		while True and self.INITIALIZED:
 			try:
 				data_str = self.iflist[station_id-1].read(self.iflist[station_id-1].inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
 				if data_str != "" and data_str != " ":
-				    if "KO" in data_str:
-				        return 0
-				    if "OK" in data_str:
-				        return 0
-
+					if "KO" in data_str:
+						print("received KO ack")
+						return 1
+					if "OK" in data_str:
+						print("received OK ack")
+						return 0
 			except:
 				pass
 		
+	def readSerialThreaded(self):
+		while True and self.INITIALIZED:
+			for station in self.iflist:
+				try:
+					data_str = station.read(station.inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
+					if "TRIGGER" in data_str:
+						print("TRIGGER DETECTED!")
+						self.TRIGGERED = True
+					if "BUTTON_1_PRESSED" in data_str:
+						print("button 1 PRESSED")
+						self.BUTTON_1 = True
+					if "BUTTON_2_PRESSED" in data_str:
+						print("button 1 PRESSED")
+						self.BUTTON_2 = True
+				except:
+					pass
