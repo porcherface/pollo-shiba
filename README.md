@@ -14,3 +14,4 @@ we are ready to test with some real lazor!
 
 ![READY](dev/polloshiba/game/graphics/res/s0.png)
 
+MAY 31: started to work on station interfaces (both graphics and interface)

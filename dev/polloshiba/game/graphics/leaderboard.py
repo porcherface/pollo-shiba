@@ -4,28 +4,19 @@
 # author: porcherface
 # descr: src for leaderboard graphics
 ######################################################################
-'''
-progetto appartamenti locali commerciali brand identity e siti web
 
-mi occupo principalmente di interior design. penso che una corretta/giusta/studiata/
-visione degli spazi e dei colori possa rendere la casa un luogo 
-
-<< di confortevole rifugio (contrapposta a prigione da cui scappare)
->> confortevole e vivibile, invece che un rifugio da cui voler scappare   (?)
-
-anche un dettaglio può definire (forse meglio "incidere" ?) se in quella casa vivrai bene o meno
-
-(forse anche questa si puo ridefinire)
-'''
 import pathlib
 import os
 import pygame
 
 COLOR=  (25, 255, 25)
-
 GRAPH_PATH = pathlib.Path(__file__).parent.absolute()
 
-# x è una stringa nome,livello max, tempo, vite
+# Logic level is coded here
+# 1000*[max_livello_superato] + tempo rimanente in secondi
+# questo funziona perfettamente se diamo meno di mille secondi per livello
+# x è una stringa nome,livello max, tempo, vite, da cui estraiamo tutti i dati che
+# ci servono
 def scoreLogic(x):
 
 	splitted = x.strip("\n").split(",")
@@ -40,9 +31,10 @@ def scoreLogic(x):
 	levelscore+=float(splitted[2])
 	return -levelscore 
 
+# the leader graphic handler class
 class LeaderBoard:
 	def __init__(self):
-		# risoluzione monitor 1
+		# risoluzione monitor
 		RES_X = 1380
 		RES_Y = 1080
 

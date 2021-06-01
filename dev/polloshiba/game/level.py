@@ -5,6 +5,12 @@
 # descr: a level scene
 ######################################################################
 
+# the entire logic of the game is coded here
+# the first functions contain hardcoded logic 
+# for levels one, two and three
+
+
+
 import pygame
 import time
 from .interface import Interface
@@ -20,7 +26,7 @@ clock = pygame.time.Clock()
 stationif = Interface()
 
 ''' 
-this function contains hardcoded messages for level 1 structure
+this function contains hardcoded messages for level structures
 returns an agent class for each initialized agent. if at least 1
 of the agents is not correctly intialized this function returns None
 '''
@@ -50,7 +56,7 @@ def InitAgents_L1():
 
 def InitAgents_L2():
 
-	# hardcoded messages for level1
+	# hardcoded messages for level2
 	print("sending init message to stations...")
 	MSG_1 = "#init$S01$E01E02E03@"
 	MSG_2 = "#init$S02$E04@"
@@ -74,7 +80,7 @@ def InitAgents_L2():
 
 def InitAgents_L3():
 
-	# hardcoded messages for level1
+	# hardcoded messages for level3
 	print("sending init message to stations...")
 	MSG_1 = "#init$S01$E01E02E03@"
 	MSG_2 = "#init$S02$E04E05E06@"
@@ -107,7 +113,7 @@ class Level:
 			password = input("wating operator call: ")
 
 
-		# setup lasers
+		# setup stations (from hardcoded functions above)
 		print("Initializing agents...")
 		if num == 1:
 			print("[SKIPPED]")
@@ -123,10 +129,17 @@ class Level:
 
 		print("  [ OK ]  ")
 
-
-		# draw graphics	
+		# timeout for levels
 		agent_list = None
-		self.screen = GameScreen(playername, num, lives, agent_list)
+		if num == 1:
+			start_time = 300
+		if num == 2:
+			start_time = 120
+		if num == 3:
+			start_time = 60
+
+		# draw graphics
+		self.screen = GameScreen(playername, num, lives, start_time, agent_list)
 		
 		# setting state
 		print("setting room state...")
@@ -160,6 +173,13 @@ class Level:
 
 		running = True
 		print("\n\n -- Room is ready to use --")
+		
+		# the execution loop: we catch the events from here:
+		# every time an event is triggered we first handle the trigger
+		# then we draw
+
+		# during the no-event routine only a portion of the assets is updated
+		# to improve code security
 		while running:
 			events = pygame.event.get()
 			for event in events:
@@ -184,12 +204,16 @@ class Level:
 	def handle_events(self, event): 
 		
 		if event.type == pygame.KEYDOWN:
+
+			# this is the START EVENT - we code here the first 
+			# button_pressed event catcher
 			if event.key == ord('a'):
 				self.screen.setState(1)
 				self.screen.timer.start(pygame.time.get_ticks())    
 				self.screen.draw()
 				return 0
 
+			# this is the WIN EVENT - we must code a double buttonpress logic
 			if event.key == ord('s'):
 				self.screen.setState(2)
 				self.screen.timer.stop(pygame.time.get_ticks())    
@@ -197,7 +221,8 @@ class Level:
 				
 				time.sleep(1)
 				return 1
-
+			# this is the DEAD catcher, we must catch a trigger from a station
+			# and fire
 			if event.key == ord('d'):
 				self.screen.setState(3)
 				self.screen.timer.stop(pygame.time.get_ticks())    
@@ -205,22 +230,24 @@ class Level:
 				time.sleep(1)
 				return 2
 
+			# a timeout event catcher. we can use both the internal timer or an external
+			# one. i would love to use an internal timer to control every timer in the room
+			# it is easier
 			if event.key == ord('f'):
 				self.screen.setState(4)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
 				time.sleep(1)
 				return 3
-				
-	def finalize(self, out):
 		
-		# qui ci va la logica di punteggio: 
 
+	# returns the time elapsed to complete the room
+	# or an empty string if we died/timedout		
+	def finalize(self, out):
 		if out == 1:
 			self.final_time = self.screen.timer.tostring()
 		else:
 			self.final_time = "---.---"
-			
 		self.outcome = out
 
 

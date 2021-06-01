@@ -16,13 +16,7 @@ class Agent(pygame.sprite.Sprite):
             self.cmdimg = []
             #self.control=pygame.image.load(os.path.join(libpath,'res',agent_id+'_ctrl.png')).convert_alpha()
             self.cmdimg.append(pygame.image.load(os.path.join(libpath,'res','on.png')).convert_alpha() )
-            self.cmdimg.append(pygame.image.load(os.path.join(libpath,'res','off.png')).convert_alpha() )
-
-
-            #self.image.set_colorkey(ALPHA)  # set alpha
-            #self.cmdimg[0].set_colorkey(ALPHA)
-            #self.cmdimg[1].set_colorkey(ALPHA)
-            
+            self.cmdimg.append(pygame.image.load(os.path.join(libpath,'res','off.png')).convert_alpha() )            
             self.rect = self.image.get_rect()
             self.crect = self.cmdimg[0].get_rect()
 

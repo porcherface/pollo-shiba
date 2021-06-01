@@ -5,6 +5,12 @@
 # descr: graphics handler, blits, renders and update graphics for levels
 ######################################################################
 
+# this class acts as a mommaclass for each graphic handler class
+# a portion of the graphic assets is placed here (those involved in fast draw, 
+# such as our timer)
+# while this might very easily be no the best implementation, it is surely very 
+# efficient (120 stable fps on a macbook pro 2014)
+
 import pygame
 import pathlib
 import os 
@@ -16,7 +22,7 @@ from .dogeview import DogeView
 from .timer import Timer
 
 class GameScreen:
-	def __init__(self, playername, level, lives, agent_list=None):
+	def __init__(self, playername, level, lives, start_time, agent_list=None):
 		
 		# risoluzione monitor 1
 		RES_X = 1380
@@ -30,12 +36,7 @@ class GameScreen:
 		self.doge = DogeView()
 
 		print("setting up timer -")
-		if level == 1:
-			start_time = 300
-		if level == 2:
-			start_time = 120
-		if level == 3:
-			start_time = 60
+
 		print("timer is "+str(start_time)+" seconds.")
 		self.timer = Timer(start_time)
 		self.timer.position(750,530)

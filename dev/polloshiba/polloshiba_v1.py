@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+
+# a signature
 pollo ='''
                    ▄              ▄
                   ▌▒█           ▄▀▒▌
@@ -17,7 +19,7 @@ pollo ='''
            ▐▒▒▒▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▒▄▒▒▐
             ▀▄▒▒▒▒▒▒▒▒▒▒▒░▒░▒░▒▄▒▒▒▒▌
               ▀▄▒▒▒▒▒▒▒▒▒▒▄▄▄▀▒▒▒▒▄▀
-  VERY BEAMS    ▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀
+VERY BEAMS      ▀▄▄▄▄▄▄▀▀▀▒▒▒▒▒▄▄▀
                    ▒▒▒▒▒▒▒▒▒▒▀▀ 
 '''
 
@@ -36,32 +38,32 @@ import argparse
 import ctypes
 import serial
 import threading
+
+# polloshiba imports
 from game.game import NewGame
 from game.interface import Interface
-
 from game.graphics.leaderboard import LeaderBoard
-# paths
+
+# pathings
 MAIN_PATH = pathlib.Path(__file__).parent.absolute()
 DATA_PATH = os.path.join(MAIN_PATH,"game", "graphics","data","leaderboard_alltime.csv")
 
-
+# argument parser, to add a bunch of options for game mode 
 parser = argparse.ArgumentParser()
-
 parser.add_argument("-t","--test", help="just a pollo to test environment",action="store_true")
 parser.add_argument("-d","--debug", help="debug mode for developers",action="store_true")
-
 args = parser.parse_args()
-
 if args.debug:
     DEBUG_MODE = True
 
-# inits
+# pygame inits
 pygame.init()
 pygame.mixer.init()
 pygame.display.init()
 pygame.font.init() 
 
-# preloading fonts really speeds up the process during execution (LOL)
+# preloading fonts (even without using them)
+# really speeds up the process during execution 
 bestfont = pygame.font.SysFont('Comic Sans MS', 30)
 
 # program icon
@@ -75,37 +77,41 @@ pygame.display.set_icon(program_icon)
 
 # MAIN CODE
 if __name__ == "__main__":
-  print(pollo)
-  if args.test:
-    sys.exit(0)
+  
+    # everything initialized, loading pollo
+    print(pollo)
+    if args.test:
+        sys.exit(0)
 
 
+    # game loop, executes indefinitely
+    while "all night long":
+      
+        # audio for leaderboard screen and waiting screen
+        print("Launching audio...")
+        musicpath = os.path.join(MAIN_PATH,'game','graphics','res','audio','portal-999999.mp3')
+        pygame.mixer.music.load(musicpath)
+        pygame.mixer.music.play()
+        pygame.mixer.music.set_volume(0.3)
 
-  while "all night long":
-    
-    print("Launching audio...")
-    musicpath = os.path.join(MAIN_PATH,'game','graphics','res','audio','portal-999999.mp3')
-    pygame.mixer.music.load(musicpath)
-    pygame.mixer.music.play()
-    pygame.mixer.music.set_volume(0.3)
+        # load leaderboard
+        leaderboard = LeaderBoard()
+        leaderboard.draw()
 
+        # false event to trigger the display flip
+        events = pygame.event.get()
+        
+        # operator sets player properties
+        playername = input("player name: ")
+        lives = int( input("lives: "))  
+        
+        # a game session
+        result = NewGame(playername, lives, "competition").outcome
+        print("congrats, "+playername+". you scored: \n"+str(result))
 
-    leaderboard = LeaderBoard()
-    leaderboard.draw()
-    events = pygame.event.get()
-    
-    playername = input("player name: ")
-    lives = int( input("lives: "))  
-    
-
-    result = NewGame(playername, lives, "competition").outcome
-
-    print("congrats, "+playername+". you scored: "+str(result))
-
-    f=open(DATA_PATH, "a")
-    f.write(result)
-    f.close()
-# start a single session (player, lives, game_mode)
-# but only if paghi dieci euri
+        # save data to leaderboard file
+        f=open(DATA_PATH, "a")
+        f.write(result)
+        f.close()
 
 
