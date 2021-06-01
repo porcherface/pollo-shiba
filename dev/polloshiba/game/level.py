@@ -10,6 +10,7 @@
 # for levels one, two and three
 
 
+
 import pygame
 import time
 from .interface import Interface
@@ -24,6 +25,7 @@ clock = pygame.time.Clock()
 
 stationif = Interface()
 
+TIMEOUT_EVENT_KEY =  pygame.USEREVENT + 1
 ''' 
 this function contains hardcoded messages for level structures
 returns an agent class for each initialized agent. if at least 1
@@ -128,7 +130,7 @@ class Level:
 
 		print("  [ OK ]  ")
 
-		# timeout for levels
+		# timeout for levels (seconds)
 		agent_list = None
 		if num == 1:
 			start_time = 300
@@ -137,9 +139,12 @@ class Level:
 		if num == 3:
 			start_time = 60
 
+		self.start_time = start_time*1000
+		self.timer_set = False
+
 		# draw graphics
 		self.screen = GameScreen(playername, num, lives, start_time, agent_list)
-		
+	
 		# setting state
 		print("setting room state...")
 		self.screen.setState(0)
@@ -179,6 +184,8 @@ class Level:
 
 		# during the no-event routine only a portion of the assets is updated
 		# to improve code security
+
+
 		while running:
 			events = pygame.event.get()
 			for event in events:
@@ -210,12 +217,26 @@ class Level:
 
 	def handle_events(self, event): 
 
+		if event.type == TIMEOUT_EVENT_KEY and self.timer_set:
+			self.screen.setState(4)
+			self.screen.timer.stop(pygame.time.get_ticks())    
+			self.screen.draw()
+			time.sleep(1)
+			return 3		
+
 		if event.type == pygame.KEYDOWN:
 
 			# this is the START EVENT - we code here the first 
 			# button_pressed event catcher
 			if event.key == ord('s'):
 				self.screen.setState(1)
+
+				# event timer (milliseconds)
+				# event keying and registration
+				TIMEOUT_EVENT = pygame.event.Event(TIMEOUT_EVENT_KEY)
+
+				pygame.time.set_timer(TIMEOUT_EVENT_KEY, int(self.start_time))
+				self.timer_set = True
 				self.screen.timer.start(pygame.time.get_ticks())    
 				self.screen.draw()
 				return 0
