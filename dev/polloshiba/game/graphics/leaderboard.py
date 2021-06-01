@@ -48,20 +48,31 @@ class LeaderBoard:
 		
 		f=open(self.datapath, "r")
 		self.entries = f.readlines()
+		
+		# leaderboard sort
 		self.entries.sort(key=scoreLogic)
 		f.close()
 
-		# leaderboard sort
-
+		self.total = len(self.entries)
+		self.passed2 = 0
+		self.passed3 = 0
 		for entry in self.entries:
 			print(entry.strip("\n"))
 
+			# leaderboard stats: 
+			if ",WIN," in entry:
+				self.passed3 += 1
+				self.passed2 += 1
+
+			if ",DEAD 3," in entry:
+				self.passed2 += 1
 
 
 	def draw(self):
 		self.screen.blit(self.image, self.rect)
 		pos_y = 200
-		for entry in self.entries:
+		#top six
+		for entry in self.entries[0:7]:
 			splitted = entry.strip("\n").split(",")
 			if len(splitted) < 3 :
 				print("ERROR IN LEADERBOARD FORMATTING")
@@ -76,7 +87,18 @@ class LeaderBoard:
 			
 			pos_y += 80
 
+		percent2 = int(self.passed2 * 100 / self.total)
+		percent3 = int(self.passed3 * 100/ self.total)
+		stats1 = self.myfont.render("TOTAL ATTEMPTS: "+str(self.total)   , True, COLOR)
+		stats2 = self.myfont.render("PASSED LEVEL 2: "+str(self.passed2)+" ("+ str(percent2)+"%)" , True, COLOR)
+		stats3 = self.myfont.render("PASSED LEVEL 3: "+str(self.passed3)+" ("+ str(percent3)+"%)" , True, COLOR)
 
+
+		self.screen.blit(stats1, stats1.get_rect().move(60, pos_y))
+		self.screen.blit(stats2, stats1.get_rect().move(60, pos_y+80))
+		self.screen.blit(stats3, stats1.get_rect().move(60, pos_y+160))
+
+			
 		pygame.display.flip()
 		pygame.display.update()
 

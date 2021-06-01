@@ -155,7 +155,7 @@ class Level:
 		self.screen.draw()
 
 		print("Launching audio...")
-		musicpath = os.path.join(FILE_PATH,'graphics','res','audio','portal-carolinedeleted.mp3')
+		musicpath = os.path.join(FILE_PATH,'graphics','res','audio','portal-carolinedeleted.ogg')
 		pygame.mixer.music.load(musicpath)
 		pygame.mixer.music.play()
 		pygame.mixer.music.set_volume(0.3)

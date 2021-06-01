@@ -89,7 +89,7 @@ if __name__ == "__main__":
       
         # audio for leaderboard screen and waiting screen
         print("Launching audio...")
-        musicpath = os.path.join(MAIN_PATH,'game','graphics','res','audio','portal-999999.mp3')
+        musicpath = os.path.join(MAIN_PATH,'game','graphics','res','audio','portal-999999.ogg')
         pygame.mixer.music.load(musicpath)
         pygame.mixer.music.play()
         pygame.mixer.music.set_volume(0.3)
@@ -102,9 +102,15 @@ if __name__ == "__main__":
         events = pygame.event.get()
         
         # operator sets player properties
+
         playername = input("player name: ")
-        lives = int( input("lives: "))  
         
+        # if you type --quit in playername, software quits
+        if playername == "--quit":
+            sys.exit(0)
+        
+        lives = int( input("lives: "))  
+
         # a game session
         result = NewGame(playername, lives, "competition").outcome
         print("congrats, "+playername+". you scored: \n"+str(result))
