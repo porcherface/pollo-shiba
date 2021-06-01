@@ -10,7 +10,6 @@
 # for levels one, two and three
 
 
-
 import pygame
 import time
 from .interface import Interface
@@ -201,20 +200,28 @@ class Level:
 			clock.tick(FPS)	
 
 
+	# handler for events
+	# for now we have
+	# press s to fire a START event
+	# press w to fire a WIN event
+	# press D to fire a  DEAD event
+	# press T to fire a TIMEOUT event
+	# press M to fire a MANUAL KILL - [TO DO - WE MUST DISCUSS THIS]
+
 	def handle_events(self, event): 
-		
+
 		if event.type == pygame.KEYDOWN:
 
 			# this is the START EVENT - we code here the first 
 			# button_pressed event catcher
-			if event.key == ord('a'):
+			if event.key == ord('s'):
 				self.screen.setState(1)
 				self.screen.timer.start(pygame.time.get_ticks())    
 				self.screen.draw()
 				return 0
 
 			# this is the WIN EVENT - we must code a double buttonpress logic
-			if event.key == ord('s'):
+			if event.key == ord('w'):
 				self.screen.setState(2)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
@@ -233,13 +240,20 @@ class Level:
 			# a timeout event catcher. we can use both the internal timer or an external
 			# one. i would love to use an internal timer to control every timer in the room
 			# it is easier
-			if event.key == ord('f'):
+			if event.key == ord('t'):
 				self.screen.setState(4)
 				self.screen.timer.stop(pygame.time.get_ticks())    
 				self.screen.draw()
 				time.sleep(1)
 				return 3
-		
+			
+			# MANUAL KILL SAFE ROUTINE
+			if event.key == ord('m'):
+				self.screen.setState(4)
+				self.screen.timer.stop(pygame.time.get_ticks())    
+				self.screen.draw()
+				time.sleep(1)
+				raise NotImplementedError
 
 	# returns the time elapsed to complete the room
 	# or an empty string if we died/timedout		
