@@ -26,6 +26,19 @@ clock = pygame.time.Clock()
 stationif = Interface()
 
 TIMEOUT_EVENT_KEY =  pygame.USEREVENT + 1
+TRIGGER_EVENT_KEY =  pygame.USEREVENT + 2
+BUTTON1_EVENT_KEY =  pygame.USEREVENT + 3
+BUTTON2_EVENT_KEY =  pygame.USEREVENT + 4
+START_EVENT_KEY = pygame.USEREVENT + 5
+WIN_EVENT_KEY = pygame.USEREVENT + 6
+
+TRIGGER_EVENT=pygame.event.Event(TRIGGER_EVENT_KEY)
+BUTTON1_EVENT=pygame.event.Event(BUTTON1_EVENT_KEY)
+BUTTON2_EVENT=pygame.event.Event(BUTTON2_EVENT_KEY)
+START_EVENT=pygame.event.Event(START_EVENT_KEY)
+WIN_EVENT=pygame.event.Event(WIN_EVENT_KEY)
+
+
 ''' 
 this function contains hardcoded messages for level structures
 returns an agent class for each initialized agent. if at least 1
@@ -117,6 +130,8 @@ class Level:
         # setup stations (from hardcoded functions above)
         print("Initializing agents...")
         stationif.initialize()
+
+        
         if num == 1:
             print("[SKIPPED]")
             # agent_list = InitAgents_L1()
@@ -218,6 +233,7 @@ class Level:
 
     def handle_events(self, event): 
 
+        # TIMEOUT EVENT
         if event.type == TIMEOUT_EVENT_KEY and self.timer_set:
             self.screen.setState(4)
             self.screen.timer.stop(pygame.time.get_ticks())    
@@ -225,56 +241,69 @@ class Level:
             time.sleep(1)
             return 3        
 
+        # DEAD EVENT
+        if event.type == TRIGGER_EVENT_KEY:
+            self.screen.setState(3)
+            self.screen.timer.stop(pygame.time.get_ticks())    
+            self.screen.draw()
+            time.sleep(1)
+            return 2
+
+        # BUTTON1 PRESSED
+        if event.type == BUTTON1_EVENT_KEY:
+            pass
+
+        # BUTTON2 PRESSED
+        if event.type == BUTTON2_EVENT_KEY:
+            pass
+
+        # START LOGIC
+        if event.type == START_EVENT_KEY:
+            self.screen.setState(1)
+
+            # event timer (milliseconds)
+            # event keying and registration
+            TIMEOUT_EVENT = pygame.event.Event(TIMEOUT_EVENT_KEY)
+
+            pygame.time.set_timer(TIMEOUT_EVENT_KEY, int(self.start_time))
+            self.timer_set = True
+            self.screen.timer.start(pygame.time.get_ticks())    
+            self.screen.draw()
+            return 0
+
+        # WIN LOGIC
+        if event.type == WIN_EVENT_KEY:
+                self.screen.setState(2)
+                self.screen.timer.stop(pygame.time.get_ticks())    
+                self.screen.draw()
+                time.sleep(1)
+                return 1    
+
+        # these are simulation events, just keydown press
         if event.type == pygame.KEYDOWN:
 
             # this is the START EVENT - we code here the first 
             # button_pressed event catcher
             if event.key == ord('s'):
-                self.screen.setState(1)
-
-                # event timer (milliseconds)
-                # event keying and registration
-                TIMEOUT_EVENT = pygame.event.Event(TIMEOUT_EVENT_KEY)
-
-                pygame.time.set_timer(TIMEOUT_EVENT_KEY, int(self.start_time))
-                self.timer_set = True
-                self.screen.timer.start(pygame.time.get_ticks())    
-                self.screen.draw()
-                return 0
+                pygame.event.post(START_EVENT)
 
             # this is the WIN EVENT - we must code a double buttonpress logic
             if event.key == ord('w'):
-                self.screen.setState(2)
-                self.screen.timer.stop(pygame.time.get_ticks())    
-                self.screen.draw()
-                
-                time.sleep(1)
-                return 1
+                pygame.event.post(WIN_EVENT)
+
             # this is the DEAD catcher, we must catch a trigger from a station
             # and fire
             if event.key == ord('d'):
-                self.screen.setState(3)
-                self.screen.timer.stop(pygame.time.get_ticks())    
-                self.screen.draw()
-                time.sleep(1)
-                return 2
+                pygame.event.post(TRIGGER_EVENT)
 
             # a timeout event catcher. we can use both the internal timer or an external
             # one. i would love to use an internal timer to control every timer in the room
             # it is easier
             if event.key == ord('t'):
-                self.screen.setState(4)
-                self.screen.timer.stop(pygame.time.get_ticks())    
-                self.screen.draw()
-                time.sleep(1)
-                return 3
+                pygame.event.post(TIMEOUT_EVENT)
             
             # MANUAL KILL SAFE ROUTINE
             if event.key == ord('m'):
-                self.screen.setState(4)
-                self.screen.timer.stop(pygame.time.get_ticks())    
-                self.screen.draw()
-                time.sleep(1)
                 raise NotImplementedError
 
     # returns the time elapsed to complete the room

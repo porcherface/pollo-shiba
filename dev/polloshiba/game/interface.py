@@ -99,6 +99,8 @@ class Interface:
 					if "TRIGGER" in data_str:
 						print("TRIGGER DETECTED!")
 						self.TRIGGERED = True
+
+						
 					if "BUTTON_1_PRESSED" in data_str:
 						print("button 1 PRESSED")
 						self.BUTTON_1 = True
