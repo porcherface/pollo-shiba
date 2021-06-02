@@ -132,7 +132,12 @@ class Level:
         while password != "polloshiba": 
             password = input("wating operator call: ")
 
+        # logic
+        print("setting room logic...")
+        self.halfway = False
+        self.started = False
 
+        print("  [ OK ]")
 
         print("setting room state...")
         agent_list = ""
@@ -285,11 +290,15 @@ class Level:
 
         # BUTTON1 PRESSED
         if event.type == BUTTON1_EVENT_KEY:
-            pass
+            if not self.halfway and not self.started:
+                pygame.event.post(START_EVENT)
+                self.started = True
+            if self.halfway and self.started:
+                pygame.event.post(WIN_EVENT)
 
         # BUTTON2 PRESSED
         if event.type == BUTTON2_EVENT_KEY:
-            pass
+            self.halfway = True
 
         # START LOGIC
         if event.type == START_EVENT_KEY:
@@ -330,12 +339,13 @@ class Level:
             if event.key == ord('d'):
                 pygame.event.post(TRIGGER_EVENT)
 
-            # a timeout event catcher. we can use both the internal timer or an external
-            # one. i would love to use an internal timer to control every timer in the room
-            # it is easier
-            if event.key == ord('t'):
-                pygame.event.post(TRIGGER_EVENT)
-            
+            # button pressed events sim            
+            if event.key == ord('1'):
+                pygame.event.post(BUTTON1_EVENT)
+
+            if event.key == ord('2'):
+                pygame.event.post(BUTTON2_EVENT)
+
             # MANUAL KILL SAFE ROUTINE
             if event.key == ord('m'):
                 raise NotImplementedError
@@ -347,4 +357,6 @@ class Level:
             self.final_time = self.screen.timer.tostring()
         else:
             self.final_time = "---.---"
+
+        time.sleep(1)
         self.outcome = out
