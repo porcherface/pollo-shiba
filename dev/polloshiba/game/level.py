@@ -223,7 +223,8 @@ class Level:
         pygame.mixer.music.set_volume(0.3)
 
         self.buzzer_effect = pygame.mixer.Sound(soundpath+"/portal-buzzer.ogg")
-        
+        self.button_effect = pygame.mixer.Sound(soundpath+"/portal-button.ogg")
+
 
         print("  [ OK ]  ")
         print("entering into exec loop...")
@@ -304,14 +305,16 @@ class Level:
         if event.type == BUTTON1_EVENT_KEY:
             if not self.halfway and not self.started:
                 pygame.event.post(START_EVENT)
+                self.button_effect.play()
                 self.started = True
             if self.halfway and self.started:
                 pygame.event.post(WIN_EVENT)
 
         # BUTTON2 PRESSED
-        if event.type == BUTTON2_EVENT_KEY:
+        if event.type == BUTTON2_EVENT_KEY and not self.halfway:
             self.halfway = True
-
+            self.button_effect.play()
+                
         # START LOGIC
         if event.type == START_EVENT_KEY:
             self.screen.setState(1)

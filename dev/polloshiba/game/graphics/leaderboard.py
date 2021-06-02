@@ -39,7 +39,7 @@ class LeaderBoard:
 		RES_Y = 1080
 
 		self.myfont = pygame.font.SysFont('Comic Sans MS', 70)
-		self.screen = pygame.display.set_mode([RES_X, RES_Y])#pygame.FULLSCREEN
+		self.screen = pygame.display.set_mode([RES_X, RES_Y],0,0)#pygame.FULLSCREEN
 		self.image = pygame.image.load(os.path.join(GRAPH_PATH,'res','leaderboard.png')).convert_alpha()
 		self.rect = self.image.get_rect()
 
