@@ -172,11 +172,23 @@ class Level:
                 agent_list = InitAgents_L3()
 
             self.screen.term.drawAgents(agent_list)
+            self.screen.draw()
+
+
             # a fake event call, just to draw graphics
             events = pygame.event.get()
-            time.sleep(3)
-            ready = True
 
+            # if init is ok
+            if "NA" in agent_list or "KO" in agent_list:
+
+                time.sleep(3)
+                readyinput= input("error in init, wanna go on or restart?[go/*]: ")
+                if readyinput == "go":
+                    ready = True
+                else:
+                    ready = False
+            else:
+                ready = True
         print(agent_list)
         print("  [ OK ]  ")
 
