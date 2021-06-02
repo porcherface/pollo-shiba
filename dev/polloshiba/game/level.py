@@ -33,6 +33,7 @@ START_EVENT_KEY = pygame.USEREVENT + 5
 WIN_EVENT_KEY = pygame.USEREVENT + 6
 
 TRIGGER_EVENT=pygame.event.Event(TRIGGER_EVENT_KEY)
+TIMEOUT_EVENT=pygame.event.Event(TIMEOUT_EVENT_KEY)
 BUTTON1_EVENT=pygame.event.Event(BUTTON1_EVENT_KEY)
 BUTTON2_EVENT=pygame.event.Event(BUTTON2_EVENT_KEY)
 START_EVENT=pygame.event.Event(START_EVENT_KEY)
@@ -176,11 +177,11 @@ class Level:
 
         # timeout for levels (seconds)
         if num == 1:
-            start_time = 300
+            start_time = 30
         if num == 2:
-            start_time = 120
+            start_time = 12
         if num == 3:
-            start_time = 60
+            start_time = 6
 
         self.start_time = start_time*1000
         self.timer_set = False
@@ -198,10 +199,14 @@ class Level:
 
         print("Launching audio...")
         musicpath = os.path.join(FILE_PATH,'graphics','res','audio','portal-carolinedeleted.ogg')
+        soundpath = os.path.join(FILE_PATH,'graphics','res','audio')
+        
         pygame.mixer.music.load(musicpath)
         pygame.mixer.music.play()
         pygame.mixer.music.set_volume(0.3)
 
+        self.buzzer_effect = pygame.mixer.Sound(soundpath+"/portal-buzzer.ogg")
+        
 
         print("  [ OK ]  ")
         print("entering into exec loop...")
@@ -262,7 +267,9 @@ class Level:
         # TIMEOUT EVENT
         if event.type == TIMEOUT_EVENT_KEY and self.timer_set:
             self.screen.setState(4)
-            self.screen.timer.stop(pygame.time.get_ticks())    
+            self.screen.timer.stop(pygame.time.get_ticks())
+            self.buzzer_effect.play()
+
             self.screen.draw()
             time.sleep(1)
             return 3        
@@ -270,7 +277,8 @@ class Level:
         # DEAD EVENT
         if event.type == TRIGGER_EVENT_KEY:
             self.screen.setState(3)
-            self.screen.timer.stop(pygame.time.get_ticks())    
+            self.screen.timer.stop(pygame.time.get_ticks())
+            self.buzzer_effect.play() 
             self.screen.draw()
             time.sleep(1)
             return 2
@@ -326,7 +334,7 @@ class Level:
             # one. i would love to use an internal timer to control every timer in the room
             # it is easier
             if event.key == ord('t'):
-                pygame.event.post(TIMEOUT_EVENT)
+                pygame.event.post(TRIGGER_EVENT)
             
             # MANUAL KILL SAFE ROUTINE
             if event.key == ord('m'):
