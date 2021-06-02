@@ -45,6 +45,7 @@ returns an agent class for each initialized agent. if at least 1
 of the agents is not correctly intialized this function returns None
 '''
 def InitAgents_L1():
+    init_string = ""
 
     # hardcoded messages for level1
     print("sending init message to stations...")
@@ -57,19 +58,20 @@ def InitAgents_L1():
 
     # send init message to stations
     stationif.send(MSG_1, 1)
-    stationif.waitack(1)
+    init_string += stationif.waitack(1) + ","
 
     stationif.send(MSG_2, 2)
-    stationif.waitack(2)
+    init_string += stationif.waitack(2)+ ","
     
     stationif.send(MSG_3, 3)
-    stationif.waitack(3)
+    init_string += stationif.waitack(3)+ ","
     
     stationif.send(MSG_4, 4)
-    stationif.waitack(4)
-
+    init_string += stationif.waitack(4)
+    return init_string
 def InitAgents_L2():
-
+    init_string = ""
+    
     # hardcoded messages for level2
     print("sending init message to stations...")
     MSG_1 = "#init$S01$E01E02E03@"
@@ -81,19 +83,21 @@ def InitAgents_L2():
 
     # send init message to stations
     stationif.send(MSG_1, 1)
-    stationif.waitack(1)
+    init_string += stationif.waitack(1)+ ","
 
     stationif.send(MSG_2, 2)
-    stationif.waitack(2)
+    init_string += stationif.waitack(2)+ ","
     
     stationif.send(MSG_3, 3)
-    stationif.waitack(3)
+    init_string += stationif.waitack(3)+ ","
     
     stationif.send(MSG_4, 4)
-    stationif.waitack(4)
+    init_string += stationif.waitack(4)
+    return init_string
 
 def InitAgents_L3():
-
+    init_string = ""
+    
     # hardcoded messages for level3
     print("sending init message to stations...")
     MSG_1 = "#init$S01$E01E02E03@"
@@ -105,16 +109,17 @@ def InitAgents_L3():
 
     # send init message to stations
     stationif.send(MSG_1, 1)
-    stationif.waitack(1)
+    init_string += stationif.waitack(1)+ ","
 
     stationif.send(MSG_2, 2)
-    stationif.waitack(2)
+    init_string += stationif.waitack(2)+ ","
     
     stationif.send(MSG_3, 3)
-    stationif.waitack(3)
+    init_string += stationif.waitack(3)+ ","
     
     stationif.send(MSG_4, 4)
-    stationif.waitack(4)
+    init_string += stationif.waitack(4)+ ","
+    return init_string
 
 class Level:
     def __init__(self, num, playername, lives):
@@ -127,27 +132,49 @@ class Level:
             password = input("wating operator call: ")
 
 
+
+        print("setting room state...")
+        agent_list = ""
+        start_time = 999.9999
+        # draw graphics
+        self.screen = GameScreen(playername, num, lives, start_time, agent_list)
+        self.screen.setState(5)
+        self.screen.draw()
+
+        # a fake event call, just to draw graphics
+        events = pygame.event.get()
+
+
         # setup stations (from hardcoded functions above)
-        print("Initializing agents...")
-        stationif.initialize()
+        # 
+        ready = False
+        while (not ready):
+            print("Initializing agents...")
+            #tationif.initialize()
 
-        
-        if num == 1:
-            print("[SKIPPED]")
-            # agent_list = InitAgents_L1()
-        
-        elif num == 2:
-            print("[SKIPPED]")
-            # agent_list = InitAgents_L2()
+            
+            # setting state to maintenance
+            if num == 1:
+                agent_list = InitAgents_L1()
+            
+            elif num == 2:
+                print("[SKIPPED]")
+                agent_list = InitAgents_L2()
 
-        elif num == 3:
-            print("[SKIPPED]")
-            # agent_list = InitAgents_L3()
+            elif num == 3:
+                print("[SKIPPED]")
+                agent_list = InitAgents_L3()
 
+            self.screen.term.drawAgents(agent_list)
+            # a fake event call, just to draw graphics
+            events = pygame.event.get()
+            time.sleep(3)
+            ready = True
+
+        print(agent_list)
         print("  [ OK ]  ")
 
         # timeout for levels (seconds)
-        agent_list = None
         if num == 1:
             start_time = 300
         if num == 2:
@@ -158,9 +185,8 @@ class Level:
         self.start_time = start_time*1000
         self.timer_set = False
 
-        # draw graphics
-        self.screen = GameScreen(playername, num, lives, start_time, agent_list)
     
+        self.screen = GameScreen(playername, num, lives, start_time, agent_list)
         # setting state
         print("setting room state...")
         self.screen.setState(0)

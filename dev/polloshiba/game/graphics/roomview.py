@@ -28,6 +28,7 @@ class RoomView:
 		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s2.jpg')).convert_alpha())
 		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s3.jpg')).convert_alpha())
 		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s4.jpg')).convert_alpha())
+		self.states.append(pygame.image.load(os.path.join(RES_PATH,'res','s5.jpg')).convert_alpha())
 		self.srect = self.states[0].get_rect().move(50,440)
 
 		self.img = self.back

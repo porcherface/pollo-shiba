@@ -84,13 +84,17 @@ class Interface:
 				if data_str != "" and data_str != " ":
 					if "KO" in data_str:
 						print("received KO ack")
-						return 1
+						return "[KO]"
 					if "OK" in data_str:
 						print("received OK ack")
-						return 0
+						return "[OK]"
 			except:
 				pass
 		
+		if not self.INITIALIZED:
+			print("interface not inizialized")
+			return "[NA]"
+
 	def readSerialThreaded(self):
 		while True and self.INITIALIZED:
 			for station in self.iflist:
@@ -109,3 +113,6 @@ class Interface:
 						self.BUTTON_2 = True
 				except:
 					pass
+		
+		if not self.INITIALIZED:
+			print("interface not initialized")

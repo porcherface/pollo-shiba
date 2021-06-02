@@ -25,3 +25,22 @@ class MsgBox:
 		   	screen.blit(self.lives2,(30,150))
 		if lives <= 1: 
 		   	screen.blit(self.lives1,(30,150))
+
+	def drawAgents(self, screen, agent_list):
+			
+		pos_y = 150 + 100
+		num = 1
+		for agent in agent_list.split(","):
+			agent_status =  self.myfont.render("    s"+str(num)+" status: "+agent, True, (25, 255, 25))		    	
+
+			screen.blit(agent_status,(30, pos_y))
+			pos_y += 50
+			num +=1
+
+		if agent_list == None:
+			count = "not init"
+		else:
+			count = agent_list.count("[OK]")
+			
+		self.lazors = self.myfont.render("LAZOR COUNT: "+str(count), True, (255, 25, 31))
+		screen.blit(self.lazors, (30, pos_y))

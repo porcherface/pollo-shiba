@@ -31,7 +31,7 @@ class GameScreen:
 		self.screen = pygame.display.set_mode([RES_X, RES_Y])#pygame.FULLSCREEN
 		# set background masks   
 		self.room = RoomView(level)
-		self.term = TerminalView(playername,lives)
+		self.term = TerminalView(playername,lives, agent_list)
 		self.ctrl = ControlView('competition',agent_list)
 		self.doge = DogeView()
 
