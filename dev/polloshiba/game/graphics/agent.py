@@ -4,6 +4,18 @@ import pygame
 import pathlib
 libpath = pathlib.Path(__file__).parent.absolute()
 
+class Station(pygame.sprite.Sprite):
+    def __init__(self, init_string):
+        pygame.sprite.Sprite.__init__(self)
+        print("into station constructor: init string is" + init_string)
+        if init_string != "":
+            if "NA" in init_string:
+                print("missing station pawn loaded")
+                self.image =pygame.image.load(os.path.join(libpath,'res',"station_NA.png")).convert_alpha()
+            else:
+                self.image =pygame.image.load(os.path.join(libpath,'res',"station"+'.png')).convert_alpha()
+        else:
+            self.image =pygame.image.load(os.path.join(libpath,'res',"station_NA.png")).convert_alpha()    
 
 class Agent(pygame.sprite.Sprite): 
     def __init__(self,agent_id = None):

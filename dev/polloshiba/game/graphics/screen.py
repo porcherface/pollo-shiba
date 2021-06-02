@@ -22,7 +22,7 @@ from .dogeview import DogeView
 from .timer import Timer
 
 class GameScreen:
-	def __init__(self, playername, level, lives, start_time, agent_list=None):
+	def __init__(self, playername, level, lives, start_time, agent_list=""):
 		
 		# risoluzione monitor 1
 		RES_X = 1380
