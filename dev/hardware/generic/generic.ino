@@ -1,11 +1,10 @@
 #include <Arduino.h>
-#include <String>
-
 
 int parseMessage(String data)
 {
     
 }
+
 
 void init()
 {
@@ -14,7 +13,7 @@ void init()
         String data = Serial.readString();
         
 
-        if data.find("#S01$init$")
+        if (data.substring(0,9) == "#S01$init$")
         {
             result = parseMessage(data);
         }
@@ -24,12 +23,17 @@ void init()
 void exec()
 {
 
+  if(1)
+  {
+    finalize();    
+  }
+
 }
 
 
 void finalize()
 {
-
+  init();
 }
 
 void setup()
