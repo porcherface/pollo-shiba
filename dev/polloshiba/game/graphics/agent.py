@@ -13,7 +13,11 @@ class Station(pygame.sprite.Sprite):
                 print("missing station pawn loaded")
                 self.image =pygame.image.load(os.path.join(libpath,'res',"station_NA.png")).convert_alpha()
             else:
-                self.image =pygame.image.load(os.path.join(libpath,'res',"station"+'.png')).convert_alpha()
+                if "#S" in init_string:
+                    self.image =pygame.image.load(os.path.join(libpath,'res',"station.png")).convert_alpha()
+                if "#P":
+                    self.image =pygame.image.load(os.path.join(libpath,'res',"spotlight.png")).convert_alpha()
+                
         else:
             self.image =pygame.image.load(os.path.join(libpath,'res',"station_NA.png")).convert_alpha()    
 

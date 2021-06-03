@@ -19,7 +19,7 @@ from .graphics.screen import GameScreen
 
 class NewGame:
 	def __init__(self, playername, lives, gamemode):
-		if gamemode != "competition":
+		if gamemode != "competition" and gamemode != "debug":
 			raise NotImplementedError
 
 		# handshake with player
@@ -41,7 +41,7 @@ class NewGame:
 		while level <= 3 and lives > 0:
 			
 			print("launching level "+str(level)+" with "+str(lives)+" lives")
-			thislevel = Level(level, playername, lives)	
+			thislevel = Level(level, playername, lives, gamemode)	
 			
 			# if we win the level
 			if thislevel.outcome == 1:

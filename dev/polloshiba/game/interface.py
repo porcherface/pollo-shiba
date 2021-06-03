@@ -30,6 +30,20 @@ class GlobalClass(object):
 import serial
 import pygame
 
+TIMEOUT_EVENT_KEY =  pygame.USEREVENT + 1
+TRIGGER_EVENT_KEY =  pygame.USEREVENT + 2
+BUTTON1_EVENT_KEY =  pygame.USEREVENT + 3
+BUTTON2_EVENT_KEY =  pygame.USEREVENT + 4
+START_EVENT_KEY = pygame.USEREVENT + 5
+WIN_EVENT_KEY = pygame.USEREVENT + 6
+
+TRIGGER_EVENT=pygame.event.Event(TRIGGER_EVENT_KEY)
+TIMEOUT_EVENT=pygame.event.Event(TIMEOUT_EVENT_KEY)
+BUTTON1_EVENT=pygame.event.Event(BUTTON1_EVENT_KEY)
+BUTTON2_EVENT=pygame.event.Event(BUTTON2_EVENT_KEY)
+START_EVENT=pygame.event.Event(START_EVENT_KEY)
+WIN_EVENT=pygame.event.Event(WIN_EVENT_KEY)
+
 # event key, used also in interface.py (actually hardcoded)
 TIMEOUT_EVENT_KEY =  pygame.USEREVENT + 1
 
@@ -49,7 +63,7 @@ class Interface:
 
 		# for now i hardcoded the devices
 		# [TO-DO] better connection handling
-		#ports.append("/dev/ttyUSB1")
+		ports.append("/dev/ttyACM0")
 		#ports.append("/dev/ttyUSB2")
 		#ports.append("/dev/ttyUSB3")
 		#ports.append("/dev/ttyUSB4")
@@ -81,11 +95,30 @@ class Interface:
 		while True and self.INITIALIZED:
 			try:
 				data_str = self.iflist[station_id-1].read(self.iflist[station_id-1].inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
+				out_str = ""
 				if data_str != "" and data_str != " ":
+					if "KO" in data_str:
+						out_str = data_str.split("$")[1]
+						return out_str
+					if "OK" in data_str:
+						out_str = data_str.split("$")[1]
+						return out_str
+			except:
+				pass
+		
+		if not self.INITIALIZED:
+			print("interface not inizialized")
+			return "[NA]"
+	def waitacksmanettino(self, station_id):
+		while True and self.INITIALIZED:
+			try:
+				data_str = self.iflist[station_id-1].read(self.iflist[station_id-1].inWaiting()).decode('ascii') #read the bytes and convert from binary array to ASCII
+				if data_str != "" and data_str != " ":
+					print("data received: "+data_str)
 					if "KO" in data_str:
 						print("received KO ack")
 						return "[KO]"
-					if "OK" in data_str:
+					if "L01_HI" in data_str:
 						print("received OK ack")
 						return "[OK]"
 			except:
@@ -103,16 +136,29 @@ class Interface:
 					if "TRIGGER" in data_str:
 						print("TRIGGER DETECTED!")
 						self.TRIGGERED = True
-
+						pygame.event.post(TRIGGER_EVENT)
 						
-					if "BUTTON_1_PRESSED" in data_str:
+					if "B01_DN" in data_str:
 						print("button 1 PRESSED")
 						self.BUTTON_1 = True
-					if "BUTTON_2_PRESSED" in data_str:
-						print("button 1 PRESSED")
+						pygame.event.post(BUTTON1_EVENT)
+						
+
+					if "B02_DN" in data_str:
+						print("button 2 PRESSED")
 						self.BUTTON_2 = True
+						pygame.event.post(BUTTON2_EVENT)
+					
+
 				except:
 					pass
 		
 		if not self.INITIALIZED:
 			print("interface not initialized")
+
+
+	def trigger_kill(self):
+
+		if self.INITIALIZED:
+			for station in self.iflist:
+				station.write( bytes("#pollo$TRIGGER@",'ascii') )

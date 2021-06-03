@@ -17,6 +17,7 @@ from .interface import Interface
 from .graphics.screen import GameScreen
 import pathlib
 import os
+import threading
 
 FILE_PATH = pathlib.Path(__file__).parent.absolute()
 
@@ -55,21 +56,13 @@ def InitAgents_L1():
     MSG_3 = "#init$S03$R01R02@"
     MSG_4 = "#init$S04$R04@"
 
-    print("expecting 4 acks...")
+    print("expecting 1 acks...")
 
     # send init message to stations
     stationif.send(MSG_1, 1)
-    init_string += stationif.waitack(1) + ","
-
-    stationif.send(MSG_2, 2)
-    init_string += stationif.waitack(2)+ ","
-    
-    stationif.send(MSG_3, 3)
-    init_string += stationif.waitack(3)+ ","
-    
-    stationif.send(MSG_4, 4)
-    init_string += stationif.waitack(4)
+    init_string += stationif.waitacksmanettino(1) 
     return init_string
+
 def InitAgents_L2():
     init_string = ""
     
@@ -110,8 +103,8 @@ def InitAgents_L3():
 
     # send init message to stations
     stationif.send(MSG_1, 1)
-    init_string += stationif.waitack(1)+ ","
-
+    init_string += stationif.waitacksmanettino(1) 
+'''
     stationif.send(MSG_2, 2)
     init_string += stationif.waitack(2)+ ","
     
@@ -121,16 +114,17 @@ def InitAgents_L3():
     stationif.send(MSG_4, 4)
     init_string += stationif.waitack(4)+ ","
     return init_string
-
+'''
 class Level:
-    def __init__(self, num, playername, lives):
+    def __init__(self, num, playername, lives, gamemode):
 
         # preparation 
 
         # operator call (safety measure)
         password = ""
-        while password != "polloshiba": 
-            password = input("wating operator call: ")
+        if gamemode != "debug":
+            while password != "polloshiba": 
+                password = input("wating operator call: ")
 
         # logic
         print("setting room logic...")
@@ -156,15 +150,16 @@ class Level:
         ready = False
         while (not ready):
             print("Initializing agents...")
-            #tationif.initialize()
 
             
             # setting state to maintenance
             if num == 1:
+                stationif.initialize()
                 agent_list = InitAgents_L1()
             
             elif num == 2:
                 print("[SKIPPED]")
+                stationif.INITIALIZED = False
                 agent_list = InitAgents_L2()
 
             elif num == 3:
@@ -182,11 +177,14 @@ class Level:
             if "NA" in agent_list or "KO" in agent_list:
 
                 time.sleep(3)
-                readyinput= input("error in init, wanna go on or restart?[go/*]: ")
-                if readyinput == "go":
+                if gamemode != "debug":
+                    readyinput= input("error in init, wanna go on or restart?[go/*]: ")
+                    if readyinput == "go":
+                        ready = True
+                    else:
+                        ready = False
+                else: 
                     ready = True
-                else:
-                    ready = False
             else:
                 ready = True
         print(agent_list)
@@ -225,9 +223,13 @@ class Level:
         self.buzzer_effect = pygame.mixer.Sound(soundpath+"/portal-buzzer.ogg")
         self.button_effect = pygame.mixer.Sound(soundpath+"/portal-button.ogg")
 
+        print("starting parallel threading for serial read")
+        self.thread = threading.Thread(target = stationif.readSerialThreaded)
+        self.thread.start()
 
         print("  [ OK ]  ")
         print("entering into exec loop...")
+
         out = self.execute()
         self.finalize(out)
 
@@ -284,6 +286,7 @@ class Level:
 
         # TIMEOUT EVENT
         if event.type == TIMEOUT_EVENT_KEY and self.timer_set:
+            stationif.trigger_kill()
             self.screen.setState(4)
             self.screen.timer.stop(pygame.time.get_ticks())
             self.buzzer_effect.play()
@@ -294,6 +297,7 @@ class Level:
 
         # DEAD EVENT
         if event.type == TRIGGER_EVENT_KEY:
+            stationif.trigger_kill()
             self.screen.setState(3)
             self.screen.timer.stop(pygame.time.get_ticks())
             self.buzzer_effect.play() 

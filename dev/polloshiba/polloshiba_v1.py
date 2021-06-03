@@ -102,17 +102,25 @@ if __name__ == "__main__":
         events = pygame.event.get()
         
         # operator sets player properties
+        if not args.debug:
+            playername = input("player name: ")
+            lives = int( input("lives: "))  
 
-        playername = input("player name: ")
-        
+        else: 
+            playername = "porcherface"
+            lives = 3
+
         # if you type --quit in playername, software quits
         if playername == "--quit":
             sys.exit(0)
         
-        lives = int( input("lives: "))  
-
+        
         # a game session
-        result = NewGame(playername, lives, "competition").outcome
+        if not args.debug:
+            result = NewGame(playername, lives, "competition").outcome
+        else:
+            result = NewGame(playername, lives, "debug").outcome
+        
         print("congrats, "+playername+". you scored: \n"+str(result))
 
         # save data to leaderboard file
